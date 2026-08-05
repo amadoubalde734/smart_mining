@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 from django.urls import reverse_lazy
-import dj_database_url
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,7 +15,11 @@ SECRET_KEY = os.environ.get(
     "django-insecure-dev-key"
 )
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+DEBUG = os.environ.get(
+    "DEBUG",
+    "False"
+) == "True"
 
 
 ALLOWED_HOSTS = [
@@ -29,6 +32,7 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://*.onrender.com",
 ]
+
 
 
 # =========================
@@ -84,7 +88,9 @@ if DEBUG:
     ]
 
 
+
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
 
 
 # =========================
@@ -94,22 +100,34 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 JAZZMIN_SETTINGS = {
 
     "site_title": "Admin Mining Smart",
+
     "site_header": "Administration Mining Smart",
+
     "site_brand": "Mining Smart",
 
-    "welcome_sign": "Bienvenue dans l'administration",
+    "welcome_sign":
+        "Bienvenue dans l'administration",
 
-    "search_model": "accounts.customuser",
+
+    "search_model":
+        "accounts.customuser",
+
 
     "topmenu_links": [
+
         {
             "name": "Accueil",
             "url": "/",
-            "permissions": ["auth.view_user"]
+            "permissions": [
+                "auth.view_user"
+            ]
         },
+
         {
-            "model": "accounts.customuser"
+            "model":
+            "accounts.customuser"
         },
+
     ],
 
 
@@ -129,10 +147,12 @@ JAZZMIN_SETTINGS = {
 
         "documents.fichierjoint":
             "fas fa-file",
+
     },
 
 
     "show_sidebar": True,
+
     "navigation_expanded": True,
 
 
@@ -140,9 +160,13 @@ JAZZMIN_SETTINGS = {
         "front"
     ],
 
+
     "hide_models": [
+
         "auth.permission",
-        "auth.group"
+
+        "auth.group",
+
     ],
 
 
@@ -154,16 +178,23 @@ JAZZMIN_SETTINGS = {
 
 JAZZMIN_UI_TWEAKS = {
 
-    "theme": "darkly",
+    "theme":
+        "darkly",
 
-    "navbar_small_text": False,
+    "navbar_small_text":
+        False,
 
-    "footer_small_text": True,
+    "footer_small_text":
+        True,
 
-    "brand_color": "primary",
+    "brand_color":
+        "primary",
 
-    "accent": "info",
+    "accent":
+        "info",
+
 }
+
 
 
 
@@ -199,8 +230,11 @@ MIDDLEWARE = [
 if DEBUG:
 
     MIDDLEWARE += [
+
         'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     ]
+
 
 
 
@@ -208,6 +242,7 @@ ROOT_URLCONF = 'smart_mining.urls'
 
 
 WSGI_APPLICATION = 'smart_mining.wsgi.application'
+
 
 
 
@@ -224,11 +259,15 @@ TEMPLATES = [
 
 
         'DIRS': [
+
             BASE_DIR / 'templates'
+
         ],
 
 
-        'APP_DIRS': True,
+        'APP_DIRS':
+
+            True,
 
 
         'OPTIONS': {
@@ -257,29 +296,117 @@ TEMPLATES = [
 
 
 
-# =========================
-# DATABASE
-# =========================
-
-DATABASES = {
-
-    "default": dj_database_url.config(
-
-        default=os.environ.get(
-            "DATABASE_URL",
-            "sqlite:///db.sqlite3"
-        ),
-
-        conn_max_age=600,
-
-    )
-
-}
-
-
 
 # =========================
-# PASSWORD
+# DATABASE MYSQL
+# =========================
+
+if os.environ.get("RENDER"):
+
+
+    DATABASES = {
+
+        "default": {
+
+            "ENGINE":
+                "django.db.backends.mysql",
+
+
+            "NAME":
+                os.environ.get(
+                    "DB_NAME"
+                ),
+
+
+            "USER":
+                os.environ.get(
+                    "DB_USER"
+                ),
+
+
+            "PASSWORD":
+                os.environ.get(
+                    "DB_PASSWORD"
+                ),
+
+
+            "HOST":
+                os.environ.get(
+                    "DB_HOST"
+                ),
+
+
+            "PORT":
+                os.environ.get(
+                    "DB_PORT",
+                    "3306"
+                ),
+
+
+            "OPTIONS": {
+
+                "charset":
+                    "utf8mb4",
+
+            },
+
+
+            "CONN_MAX_AGE":
+                600,
+
+        }
+
+    }
+
+
+
+else:
+
+
+    DATABASES = {
+
+        "default": {
+
+            "ENGINE":
+                "django.db.backends.mysql",
+
+
+            "NAME":
+                "smart_mining_db",
+
+
+            "USER":
+                "root",
+
+
+            "PASSWORD":
+                "",
+
+
+            "HOST":
+                "localhost",
+
+
+            "PORT":
+                "3306",
+
+
+            "OPTIONS": {
+
+                "charset":
+                    "utf8mb4",
+
+            },
+
+        }
+
+    }
+
+
+
+
+# =========================
+# PASSWORD VALIDATION
 # =========================
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -308,11 +435,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 
+
 # =========================
 # CRISPY
 # =========================
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 
 
 
@@ -342,11 +471,13 @@ LANGUAGES = [
 ]
 
 
+
 LOCALE_PATHS = [
 
     BASE_DIR / 'locale',
 
 ]
+
 
 
 
@@ -357,11 +488,13 @@ LOCALE_PATHS = [
 STATIC_URL = '/static/'
 
 
+
 STATICFILES_DIRS = [
 
     BASE_DIR / "static",
 
 ]
+
 
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -373,6 +506,7 @@ STORAGES = {
     "staticfiles": {
 
         "BACKEND":
+
         "whitenoise.storage.CompressedManifestStaticFilesStorage",
 
     },
