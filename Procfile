@@ -1,1 +1,1 @@
-web: gunicorn smart_mining.wsgi
+web: gunicorn smart_mining.wsgi:application
