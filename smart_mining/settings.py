@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 from django.urls import reverse_lazy
+import dj_database_url
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -14,7 +16,8 @@ SECRET_KEY = os.environ.get(
     "django-insecure-dev-key"
 )
 
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -23,11 +26,17 @@ ALLOWED_HOSTS = [
 ]
 
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
+]
+
+
 # =========================
 # APPLICATIONS
 # =========================
 
 INSTALLED_APPS = [
+
     'jazzmin',
 
     'django.contrib.admin',
@@ -38,17 +47,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
+
     # Packages
     'django_countries',
     'widget_tweaks',
     'crispy_forms',
     'crispy_bootstrap5',
-    'debug_toolbar',
     'rest_framework',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'simple_history',
+
 
     # Applications métier
     'accounts',
@@ -68,6 +78,12 @@ INSTALLED_APPS = [
 ]
 
 
+if DEBUG:
+    INSTALLED_APPS += [
+        'debug_toolbar',
+    ]
+
+
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
@@ -80,45 +96,75 @@ JAZZMIN_SETTINGS = {
     "site_title": "Admin Mining Smart",
     "site_header": "Administration Mining Smart",
     "site_brand": "Mining Smart",
-    "welcome_sign": "Bienvenue dans l'interface d'administration",
-    "copyright": "© 2025 Ta Société",
+
+    "welcome_sign": "Bienvenue dans l'administration",
 
     "search_model": "accounts.customuser",
 
     "topmenu_links": [
-        {"name": "Accueil", "url": "/", "permissions": ["auth.view_user"]},
-        {"model": "accounts.customuser"},
+        {
+            "name": "Accueil",
+            "url": "/",
+            "permissions": ["auth.view_user"]
+        },
+        {
+            "model": "accounts.customuser"
+        },
     ],
 
+
     "icons": {
-        "accounts.customuser": "fas fa-user-tie",
-        "auth.group": "fas fa-users",
-        "personnel.employe": "fas fa-id-badge",
-        "habilitation.typeformation": "fas fa-chalkboard-teacher",
-        "habilitation.formationchauffeur": "fas fa-car",
-        "documents.fichierjoint": "fas fa-file",
+
+        "accounts.customuser":
+            "fas fa-user-tie",
+
+        "auth.group":
+            "fas fa-users",
+
+        "personnel.employe":
+            "fas fa-id-badge",
+
+        "habilitation.typeformation":
+            "fas fa-chalkboard-teacher",
+
+        "documents.fichierjoint":
+            "fas fa-file",
     },
+
 
     "show_sidebar": True,
     "navigation_expanded": True,
 
-    "hide_apps": ["front"],
+
+    "hide_apps": [
+        "front"
+    ],
+
     "hide_models": [
         "auth.permission",
         "auth.group"
     ],
 
+
     "related_modal_active": True,
+
 }
+
 
 
 JAZZMIN_UI_TWEAKS = {
+
     "theme": "darkly",
+
     "navbar_small_text": False,
+
     "footer_small_text": True,
+
     "brand_color": "primary",
+
     "accent": "info",
 }
+
 
 
 # =========================
@@ -129,11 +175,12 @@ MIDDLEWARE = [
 
     'django.middleware.security.SecurityMiddleware',
 
-    # Render static files
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
+
     'django.middleware.locale.LocaleMiddleware',
+
     'django.middleware.common.CommonMiddleware',
 
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -146,11 +193,22 @@ MIDDLEWARE = [
 
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 
+if DEBUG:
+
+    MIDDLEWARE += [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
+
+
+
 ROOT_URLCONF = 'smart_mining.urls'
+
+
+WSGI_APPLICATION = 'smart_mining.wsgi.application'
+
 
 
 # =========================
@@ -160,19 +218,25 @@ ROOT_URLCONF = 'smart_mining.urls'
 TEMPLATES = [
 
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+
+        'BACKEND':
+        'django.template.backends.django.DjangoTemplates',
+
 
         'DIRS': [
             BASE_DIR / 'templates'
         ],
 
+
         'APP_DIRS': True,
+
 
         'OPTIONS': {
 
             'context_processors': [
 
                 'django.template.context_processors.debug',
+
                 'django.template.context_processors.request',
 
                 'django.contrib.auth.context_processors.auth',
@@ -182,48 +246,36 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
 
                 'notifications.context_processors.unread_notifications',
+
             ],
+
         },
+
     },
+
 ]
 
-
-WSGI_APPLICATION = 'smart_mining.wsgi.application'
 
 
 # =========================
 # DATABASE
 # =========================
 
-# Local développement
 DATABASES = {
 
-    'default': {
+    "default": dj_database_url.config(
 
-        'ENGINE': 'django.db.backends.mysql',
+        default=os.environ.get(
+            "DATABASE_URL",
+            "sqlite:///db.sqlite3"
+        ),
 
-        'NAME': 'smart_mining_db',
+        conn_max_age=600,
 
-        'USER': 'root',
-
-        'PASSWORD': '',
-
-        'HOST': 'localhost',
-
-        'PORT': '3306',
-
-        'OPTIONS': {
-
-            'charset': 'utf8mb4',
-
-            'init_command':
-            "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'; SET sql_mode='STRICT_TRANS_TABLES';",
-
-        },
-
-    }
+    )
 
 }
+
 
 
 # =========================
@@ -255,11 +307,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # =========================
 # CRISPY
 # =========================
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 
 
 # =========================
@@ -268,11 +322,15 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LANGUAGE_CODE = 'fr'
 
+
 TIME_ZONE = 'UTC'
+
 
 USE_I18N = True
 
+
 USE_TZ = True
+
 
 
 LANGUAGES = [
@@ -289,6 +347,7 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 
 ]
+
 
 
 # =========================
@@ -308,13 +367,35 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
+
+STORAGES = {
+
+    "staticfiles": {
+
+        "BACKEND":
+        "whitenoise.storage.CompressedManifestStaticFilesStorage",
+
+    },
+
+}
+
+
+
 MEDIA_URL = '/media/'
+
 
 MEDIA_ROOT = BASE_DIR / "media"
 
 
 
+
+# =========================
+# DEFAULT FIELD
+# =========================
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
 
 
 # =========================
@@ -324,6 +405,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = reverse_lazy(
     'accounts:admin_login'
 )
+
 
 LOGIN_REDIRECT_URL = reverse_lazy(
     'backend:dashboard'
