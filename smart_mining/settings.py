@@ -270,93 +270,54 @@ TEMPLATES = [
 
 ]
 
-
-
 # ==================================================
 # DATABASE
 # ==================================================
 
-if os.environ.get("DB_HOST"):
+DATABASES = {
 
-    DATABASES = {
+    "default": {
 
-        "default": {
+        "ENGINE": "django.db.backends.mysql",
 
-            "ENGINE":
-                "django.db.backends.mysql",
+        "NAME": os.environ.get(
+            "DB_NAME",
+            "smart_mining_db"
+        ),
 
-            "NAME":
-                os.environ.get("DB_NAME"),
+        "USER": os.environ.get(
+            "DB_USER",
+            "root"
+        ),
 
-            "USER":
-                os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get(
+            "DB_PASSWORD",
+            ""
+        ),
 
-            "PASSWORD":
-                os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get(
+            "DB_HOST",
+            "127.0.0.1"
+        ),
 
-            "HOST":
-                os.environ.get("DB_HOST"),
+        "PORT": os.environ.get(
+            "DB_PORT",
+            "3306"
+        ),
 
-            "PORT":
-                os.environ.get(
-                    "DB_PORT",
-                    "3306"
-                ),
+        "OPTIONS": {
 
-            "OPTIONS": {
+            "charset": "utf8mb4",
 
-                "charset":
-                    "utf8mb4",
+            "init_command": "SET NAMES utf8mb4",
 
-                "init_command":
-                    "SET NAMES utf8mb4",
+        },
 
-            },
-
-            "CONN_MAX_AGE":
-                600,
-
-        }
-
-    }
-
-
-else:
-
-    DATABASES = {
-
-        "default": {
-
-            "ENGINE":
-                "django.db.backends.mysql",
-
-            "NAME":
-                "smart_mining_db",
-
-            "USER":
-                "root",
-
-            "PASSWORD":
-                "",
-
-            "HOST":
-                "localhost",
-
-            "PORT":
-                "3306",
-
-            "OPTIONS": {
-
-                "charset":
-                    "utf8mb4",
-
-            },
-
-        }
+        "CONN_MAX_AGE": 600,
 
     }
 
-
+}
 
 # ==================================================
 # PASSWORD VALIDATION
