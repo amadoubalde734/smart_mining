@@ -273,52 +273,46 @@ TEMPLATES = [
 # ==================================================
 # DATABASE
 # ==================================================
+# ==================================================
+# DATABASE
+# ==================================================
 
-DATABASES = {
+if os.environ.get("RENDER") == "True":
 
-    "default": {
-
-        "ENGINE": "django.db.backends.mysql",
-
-        "NAME": os.environ.get(
-            "DB_NAME",
-            "smart_mining_db"
-        ),
-
-        "USER": os.environ.get(
-            "DB_USER",
-            "root"
-        ),
-
-        "PASSWORD": os.environ.get(
-            "DB_PASSWORD",
-            ""
-        ),
-
-        "HOST": os.environ.get(
-            "DB_HOST",
-            "127.0.0.1"
-        ),
-
-        "PORT": os.environ.get(
-            "DB_PORT",
-            "3306"
-        ),
-
-        "OPTIONS": {
-
-            "charset": "utf8mb4",
-
-            "init_command": "SET NAMES utf8mb4",
-
-        },
-
-        "CONN_MAX_AGE": 600,
-
+    # Base SQLite pour Render
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
 
-}
+else:
 
+    # Base MySQL locale (WAMP)
+    DATABASES = {
+        "default": {
+
+            "ENGINE": "django.db.backends.mysql",
+
+            "NAME": "smart_mining_db",
+
+            "USER": "root",
+
+            "PASSWORD": "",
+
+            "HOST": "127.0.0.1",
+
+            "PORT": "3306",
+
+            "OPTIONS": {
+                "charset": "utf8mb4",
+                "init_command": "SET NAMES utf8mb4",
+            },
+
+            "CONN_MAX_AGE": 600,
+        }
+    }
 # ==================================================
 # PASSWORD VALIDATION
 # ==================================================
