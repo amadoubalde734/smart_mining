@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-from django.urls import reverse_lazy
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,13 +56,15 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "rest_framework",
+
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+
     "simple_history",
 
 
-    # Apps métier
+    # Applications métier
     "accounts",
     "backend",
     "front",
@@ -78,6 +79,7 @@ INSTALLED_APPS = [
     "production",
     "clients",
     "commercial",
+
 ]
 
 
@@ -92,13 +94,29 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 
 
 # ==================================================
+# AUTHENTIFICATION
+# ==================================================
+
+AUTHENTICATION_BACKENDS = [
+
+    "django.contrib.auth.backends.ModelBackend",
+
+    "allauth.account.auth_backends.AuthenticationBackend",
+
+]
+
+
+
+# ==================================================
 # JAZZMIN
 # ==================================================
 
 JAZZMIN_SETTINGS = {
 
     "site_title": "Admin Mining Smart",
+
     "site_header": "Administration Mining Smart",
+
     "site_brand": "Mining Smart",
 
     "welcome_sign":
@@ -116,8 +134,11 @@ JAZZMIN_SETTINGS = {
     ],
 
     "hide_models": [
+
         "auth.permission",
+
         "auth.group",
+
     ],
 
     "icons": {
@@ -206,7 +227,6 @@ WSGI_APPLICATION = "smart_mining.wsgi.application"
 
 
 
-
 # ==================================================
 # TEMPLATES
 # ==================================================
@@ -216,8 +236,7 @@ TEMPLATES = [
     {
 
         "BACKEND":
-        "django.template.backends.django.DjangoTemplates",
-
+            "django.template.backends.django.DjangoTemplates",
 
         "DIRS": [
 
@@ -225,9 +244,7 @@ TEMPLATES = [
 
         ],
 
-
         "APP_DIRS": True,
-
 
         "OPTIONS": {
 
@@ -255,9 +272,8 @@ TEMPLATES = [
 
 
 
-
 # ==================================================
-# DATABASE MYSQL
+# DATABASE
 # ==================================================
 
 if os.environ.get("DB_HOST"):
@@ -267,38 +283,38 @@ if os.environ.get("DB_HOST"):
         "default": {
 
             "ENGINE":
-            "django.db.backends.mysql",
+                "django.db.backends.mysql",
 
             "NAME":
-            os.environ.get("DB_NAME"),
+                os.environ.get("DB_NAME"),
 
             "USER":
-            os.environ.get("DB_USER"),
+                os.environ.get("DB_USER"),
 
             "PASSWORD":
-            os.environ.get("DB_PASSWORD"),
+                os.environ.get("DB_PASSWORD"),
 
             "HOST":
-            os.environ.get("DB_HOST"),
+                os.environ.get("DB_HOST"),
 
             "PORT":
-            os.environ.get(
-                "DB_PORT",
-                "3306"
-            ),
+                os.environ.get(
+                    "DB_PORT",
+                    "3306"
+                ),
 
             "OPTIONS": {
 
                 "charset":
-                "utf8mb4",
+                    "utf8mb4",
 
                 "init_command":
-                "SET NAMES utf8mb4",
+                    "SET NAMES utf8mb4",
 
             },
 
             "CONN_MAX_AGE":
-            600,
+                600,
 
         }
 
@@ -312,30 +328,27 @@ else:
         "default": {
 
             "ENGINE":
-            "django.db.backends.mysql",
+                "django.db.backends.mysql",
 
             "NAME":
-            "smart_mining_db",
+                "smart_mining_db",
 
             "USER":
-            "root",
+                "root",
 
             "PASSWORD":
-            "",
+                "",
 
             "HOST":
-            "localhost",
+                "localhost",
 
             "PORT":
-            "3306",
+                "3306",
 
             "OPTIONS": {
 
                 "charset":
-                "utf8mb4",
-
-                "init_command":
-                "SET NAMES utf8mb4",
+                    "utf8mb4",
 
             },
 
@@ -345,9 +358,8 @@ else:
 
 
 
-
 # ==================================================
-# PASSWORD
+# PASSWORD VALIDATION
 # ==================================================
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -390,11 +402,15 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LANGUAGE_CODE = "fr"
 
+
 TIME_ZONE = "UTC"
+
 
 USE_I18N = True
 
+
 USE_TZ = True
+
 
 
 LANGUAGES = [
@@ -438,7 +454,7 @@ STORAGES = {
 
         "BACKEND":
 
-        "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "whitenoise.storage.CompressedManifestStaticFilesStorage",
 
     },
 
@@ -450,7 +466,6 @@ MEDIA_URL = "/media/"
 
 
 MEDIA_ROOT = BASE_DIR / "media"
-
 
 
 
@@ -466,11 +481,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # LOGIN
 # ==================================================
 
-LOGIN_URL = reverse_lazy(
-    "accounts:admin_login"
-)
+LOGIN_URL = "accounts:admin_login"
 
 
-LOGIN_REDIRECT_URL = reverse_lazy(
-    "backend:dashboard"
-)
+LOGIN_REDIRECT_URL = "backend:dashboard"
