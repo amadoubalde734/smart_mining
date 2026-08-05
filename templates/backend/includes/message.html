@@ -1,0 +1,24 @@
+{% if messages %}
+<div id="message-container" style="position: fixed; top: 20px; right: 20px; width: 300px; z-index: 1050;">
+  {% for message in messages %}
+  <div class="alert alert-sm alert-{{ message.tags }} mb-2" role="alert" style="opacity: 1; transition: opacity 0.5s ease;">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+  // Après 5 secondes, on fait disparaitre les messages en douceur
+  setTimeout(() => {
+    const container = document.getElementById('message-container');
+    if (!container) return;
+    container.style.opacity = '0';
+    // Puis on supprime le container du DOM après la transition
+    setTimeout(() => {
+      if (container.parentNode) {
+        container.parentNode.removeChild(container);
+      }
+    }, 600);
+  }, 5000); // 5000 ms = 5 secondes
+</script>
+{% endif %}

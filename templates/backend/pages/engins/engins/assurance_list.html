@@ -1,0 +1,217 @@
+
+<!-- =======================
+     TITRE PAGE
+======================= -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Liste des Assurances Engins</h4>
+        </div>
+    </div>
+</div>
+
+<!-- =======================
+     WIDGETS
+======================= -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Total Assurances</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ total_assurances }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                            <i class="bx bx-layer text-primary"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Valides</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ valid_assurances }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="bx bx-check-circle text-success"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Expirées</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ expired_assurances }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-danger-subtle rounded fs-3">
+                            <i class="bx bx-x-circle text-danger"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =======================
+     TABLE
+======================= -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Assurances Engins</h5>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAssuranceModal">
+                    <i class="ri-add-line align-bottom me-1"></i> Ajouter une assurance
+                </button>
+            </div>
+
+            <div class="card-body table-responsive">
+                <table id="datatable-buttons" class="display table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Immatriculation</th>
+                            <th>Flotte</th>
+                            <th>Assureur</th>
+                            <th>Type Assurance</th>
+                            <th>Date Début</th>
+                            <th>Date Fin</th>
+                            <th>Observations</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in assurances %}
+                        <tr>
+                            <td>{{ a.engin.immatriculation }}</td>
+                            <td>{{ a.engin.flottes.first.nom|default:"-" }}</td>
+                            <td>{{ a.nom }}</td>
+                            <td>{{ a.get_type_assurance_display }}</td>
+                            <td>{{ a.date_debut }}</td>
+                            <td>{{ a.date_fin }}</td>
+                            <td>{{ a.observations|default:"-"|truncatechars:50 }}</td>
+                            <td>
+                                <div class="dropdown d-inline-block">
+                                    <button class="btn btn-soft-secondary btn-sm" type="button" data-bs-toggle="dropdown">
+                                        <i class="ri-more-fill"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a href="{% url 'assurance:assurance_update' a.id %}" class="dropdown-item">
+                                                <i class="ri-pencil-fill text-muted me-2"></i> Modifier
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'assurance:assurance_delete' a.id %}" class="dropdown-item">
+                                                <i class="ri-delete-bin-fill text-muted me-2"></i> Supprimer
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Aucune assurance trouvée</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =======================
+     MODAL AJOUT ASSURANCE
+======================= -->
+<div class="modal fade" id="addAssuranceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <form method="post" action="{% url 'engins:assurances' %}">
+
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Ajouter une Assurance Engin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+
+                        <!-- Engin -->
+                        <div class="col-md-6">
+                            <label class="form-label">Engin</label>
+                            <select name="engin" class="form-control select2" required>
+                                <option value="">-- Sélectionner --</option>
+                                {% for e in all_engins %}
+                                    <option value="{{ e.id }}">{{ e.immatriculation }} - {{ e.marque_modele }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Assureur -->
+                        <div class="col-md-6">
+                            <label class="form-label">Assureur</label>
+                            <input type="text" name="nom" class="form-control" required>
+                        </div>
+
+                        <!-- Type Assurance -->
+                        <div class="col-md-6">
+                            <label class="form-label">Type Assurance</label>
+                            <select name="type_assurance" class="form-control select2" required>
+                                {% for key, value in assurance_types %}
+                                    <option value="{{ key }}">{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Dates -->
+                        <div class="col-md-6">
+                            <label class="form-label">Date Début</label>
+                            <input type="date" name="date_debut" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date Fin</label>
+                            <input type="date" name="date_fin" class="form-control" required>
+                        </div>
+
+                        <!-- Observations -->
+                        <div class="col-md-12">
+                            <label class="form-label">Observations</label>
+                            <textarea name="observations" rows="3" class="form-control"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="ri-save-line"></i> Enregistrer
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'backend/includes/sweetalert_list.html' %}

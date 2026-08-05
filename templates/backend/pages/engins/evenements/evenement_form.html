@@ -1,0 +1,214 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">{% if modifier %}Modifier{% else %}Ajouter{% endif %} un Événement Engin</h4>
+        <a href="{% url 'engins:evenement_list' %}" class="btn btn-secondary btn-sm">
+            <i class="ri-arrow-left-line"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+
+<!-- Formulaire Événement -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Formulaire Événement Engin</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="row g-4">
+
+    <!-- =========================
+         BLOC 1 : ÉVÉNEMENT
+    ========================== -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header bg-light">
+                <strong>Informations de l’événement</strong>
+            </div>
+            <div class="card-body row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Engin</label>
+                    {{ form.engin }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Type d’événement</label>
+                    {{ form.type_evenement }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Date de début</label>
+                    {{ form.date_debut }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Date de fin</label>
+                    {{ form.date_fin }}
+                </div>
+
+                <div class="col-12">
+                    <div class="form-check mt-2">
+                        {{ form.definitif }}
+                        <label class="form-check-label">
+                            Événement définitif
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================
+         BLOC 2 : FLOTTES & STATUTS
+    ========================== -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header bg-light">
+                <strong>Gestion des flottes & statuts</strong>
+            </div>
+            <div class="card-body row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Flotte initiale</label>
+                    {{ form.flotte_initiale }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Flotte bénéficiaire</label>
+                    {{ form.flotte_beneficiaire }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Statut camion</label>
+                    {{ form.statut_camion }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Statut radar</label>
+                    {{ form.statut_radar }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================
+         BLOC 3 : VALIDATION & TEXTE
+    ========================== -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <strong>Validation & informations complémentaires</strong>
+            </div>
+            <div class="card-body row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">Valideur</label>
+                    {{ form.valideur }}
+                </div>
+
+                <div class="col-md-8">
+                    <label class="form-label">Description</label>
+                    {{ form.description }}
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Observations</label>
+                    {{ form.observations }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================
+         BLOC 4 : DOCUMENTS
+    ========================== -->
+    <div class="col-12">
+        <div class="card border-dashed">
+            <div class="card-header bg-light">
+                <strong>Documents associés</strong>
+            </div>
+            <div class="card-body row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">Titre</label>
+                    {{ document_form.titre }}
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Type de document</label>
+                    {{ document_form.type_document }}
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Fichier</label>
+                    {{ document_form.fichier }}
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Description</label>
+                    {{ document_form.description }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================
+         BOUTONS
+    ========================== -->
+    <div class="col-12 text-end mt-3">
+        <button type="submit" class="btn btn-primary">
+            <i class="ri-save-line"></i>
+            {% if modifier %}Modifier{% else %}Enregistrer{% endif %}
+        </button>
+        <a href="{% url 'engins:evenement_list' %}" class="btn btn-outline-secondary">
+            Annuler
+        </a>
+    </div>
+
+</div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const definitifCheckbox = document.getElementById("id_definitif");
+    const dateFinInput = document.getElementById("id_date_fin");
+
+    function toggleDateFin() {
+        if (definitifCheckbox.checked) {
+            dateFinInput.value = "";
+            dateFinInput.disabled = true;
+        } else {
+            dateFinInput.disabled = false;
+        }
+    }
+
+    definitifCheckbox.addEventListener("change", toggleDateFin);
+    toggleDateFin();
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,646 @@
+{% extends "backend/base.html" %}
+{% block extra_css %}
+<style>
+/* Réduire la taille des titres de cartes */
+.card-header h5 {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+/* Rendre les card-body plus compact */
+.card-body {
+    padding: 0.5rem 0.75rem;
+}
+
+/* Réduire la hauteur des lignes de table */
+.table.table-bordered td,
+.table.table-bordered th {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+/* Inputs plus petits */
+.table input[type="checkbox"] {
+    transform: scale(0.85);
+    margin: 0;
+}
+
+/* Réduire les marges entre les cards */
+.col-12 {
+    margin-bottom: 0.5rem;
+}
+
+/* Optionnel : rendre les cards légèrement plus fines */
+.card {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}
+
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Ajouter une Inspection Engin / Remorque</h4>
+        <a href="{% url 'engins:inspection_list' %}" class="btn btn-secondary btn-sm">
+            <i class="ri-arrow-left-line"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="row">
+
+        <!-- ========================= Informations générales ========================= -->
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Informations générales</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>N’inspections</th>
+                                <td>{{ form.numero_inspection }}</td>
+                                <th>Date d’inspection</th>
+                                <td>{{ form.date_inspection }}</td>
+                            </tr>
+                            <tr>
+                                <th>N° Tracteur / Porteur</th>
+                                <td>{{ form.engin }}</td>
+                                <th>N° Remorque / Citerne</th>
+                                <td>{{ form.remorque }}</td>
+                            </tr>
+                            <tr>
+                                <th>Type d’équipement</th>
+                                <td>{{ form.partie }}</td>
+                                <th>Kilométrage</th>
+                                <td>{{ form.kilometrage }}</td>
+                            </tr>
+                            <tr>
+                                <th>04 Dernier chiffre du châssis</th>
+                                <td>{{ form.dernier_chiffre_chassis }}</td>
+                                <th>Chauffeur</th>
+                                <td>{{ form.chauffeur }}</td>
+                            </tr>
+                            <tr>
+                                <th>Flotte</th>
+                                <td>{{ form.flotte }}</td>
+                                <th>Pass Mine</th>
+                                <td>{{ form.pass_mine }}</td>
+                            </tr>
+                            <tr>
+                                <th>Téléphone</th>
+                                <td>{{ form.telephone }}</td>
+                                <th>Responsable contrôle technique</th>
+                                <td>{{ form.responsable }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Documentation ========================= -->
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Documentation</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Élément</th>
+                                <th>Tracteur OK</th>
+                                <th>Tracteur NON</th>
+                                <th>Remorque OK</th>
+                                <th>Remorque NON</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Carte grise</td>
+                                <td><input type="checkbox" name="carte_grise_tracteur_ok" {% if form.carte_grise_tracteur_ok.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="carte_grise_tracteur_non" {% if form.carte_grise_tracteur_non.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="carte_grise_remorque_ok" {% if form.carte_grise_remorque_ok.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="carte_grise_remorque_non" {% if form.carte_grise_remorque_non.value %}checked{% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Assurance – date valide</td>
+                                <td><input type="checkbox" name="assurance_tracteur_ok" {% if form.assurance_tracteur_ok.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="assurance_tracteur_non" {% if form.assurance_tracteur_non.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="assurance_remorque_ok" {% if form.assurance_remorque_ok.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="assurance_remorque_non" {% if form.assurance_remorque_non.value %}checked{% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Visite technique</td>
+                                <td><input type="checkbox" name="visite_tracteur_ok" {% if form.visite_technique_tracteur_ok.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="visite_tracteur_non" {% if form.visite_technique_tracteur_non.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="visite_remorque_ok" {% if form.visite_technique_remorque_ok.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="visite_remorque_non" {% if form.visite_technique_remorque_non.value %}checked{% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Permis conduire (lisible & valide)</td>
+                                <td><input type="checkbox" name="permis_tracteur_ok" {% if form.permis_conduire_tracteur_ok.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="permis_tracteur_non" {% if form.permis_conduire_tracteur_non.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="permis_remorque_ok" {% if form.permis_conduire_remorque_ok.value %}checked{% endif %}></td>
+                                <td><input type="checkbox" name="permis_remorque_non" {% if form.permis_conduire_remorque_non.value %}checked{% endif %}></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Signalisation ========================= -->
+        {% if signalisation_form %}
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Signalisation</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Élément</th>
+                                <th>Prés./Fonc.</th>
+                                <th>Manq./Déf.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in signalisation_form %}
+                            <tr>
+                                <td>{{ field.label }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ========================= Extérieur ========================= -->
+                {% if extincteur_form %}
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">Extincteurs</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Élément</th>
+                                        <th>Prés./Fonc.</th>
+                                        <th>Manq./Déf.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for field_name, field in extincteur_fields_left %}
+                                    <tr>
+                                        <td>{{ field.label }}</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Élément</th>
+                                        <th>Prés./Fonc.</th>
+                                        <th>Manq./Déf.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for field_name, field in extincteur_fields_right %}
+                                    <tr>
+                                        <td>{{ field.label }}</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- ========================= EPI / EPC ========================= -->
+        {% if epi_form %}
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">EPI / EPC</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Élément</th>
+                                        <th>Prés./Fonc.</th>
+                                        <th>Manq./Déf.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for field_name, field in epi_fields_left %}
+                                    <tr>
+                                        <td>{{ field.label }}</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Élément</th>
+                                        <th>Prés./Fonc.</th>
+                                        <th>Manq./Déf.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for field_name, field in epi_fields_right %}
+                                    <tr>
+                                        <td>{{ field.label }}</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ========================= Moteur ========================= -->
+        {% if moteur_form %}
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Moteur en fonctionnement</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Élément</th>
+                                <th>Prés./Fonc.</th>
+                                <th>Manq./Déf.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in moteur_form %}
+                            <tr>
+                                <td>{{ field.label }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ========================= Freinage ========================= -->
+        {% if freinage_form %}
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Systèmes de freinage</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Élément</th>
+                                <th>Prés./Fonc.</th>
+                                <th>Manq./Déf.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in freinage_form %}
+                            <tr>
+                                <td>{{ field.label }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ========================= Mécanismes et parties mobiles ========================= -->
+        {% if mecanismes_form %}
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Mécanismes et parties mobiles</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Élément</th>
+                                <th>Prés./Fonc.</th>
+                                <th>Manq./Déf.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in mecanismes_form %}
+                            <tr>
+                                <td>{{ field.label }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ========================= Parties Mobiles ========================= -->
+        {% if parties_mobiles_form %}
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Parties Mobiles</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Colonne gauche -->
+                        <div class="col-md-6">
+                            <table class="table table-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Élément</th>
+                                        <th>Prés./Fonc.</th>
+                                        <th>Manq./Déf.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for field_name, field in parties_mobiles_left %}
+                                    <tr>
+                                        <td>{{ field.label }}</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_pf" {% if field.initial == 'pf' %}checked{% endif %}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_md" {% if field.initial == 'md' %}checked{% endif %}>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Colonne droite -->
+                        <div class="col-md-6">
+                            <table class="table table-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Élément</th>
+                                        <th>Prés./Fonc.</th>
+                                        <th>Manq./Déf.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for field_name, field in parties_mobiles_right %}
+                                    <tr>
+                                        <td>{{ field.label }}</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_pf" {% if field.value == 'pf' %}checked{% endif %}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" name="{{ field_name }}_md" {% if field.value == 'md' %}checked{% endif %}>
+                                        </td>
+
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ========================= Pneumatiques ========================= -->
+        {% if pneumatiques_form %}
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Pneumatiques</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Élément</th>
+                                <th>Prés./Fonc.</th>
+                                <th>Manq./Déf.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in pneumatiques_form %}
+                            <tr>
+                                <td>{{ field.label }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_pf" {% if field.value == "pf" %}checked{% endif %}>
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="{{ field.name }}_md" {% if field.value == "md" %}checked{% endif %}>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- ========================= Fuites ========================= -->
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">Fuites</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <!-- Colonne 1 : Huile moteur -->
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label>Huile moteur :</label>
+                                {% for checkbox in form.fuite_huile_moteur %}
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}
+                                        {{ checkbox.choice_label }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Colonne 2 : Partie hydraulique -->
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label>Partie hydraulique :</label>
+                                {% for checkbox in form.fuite_hydraulique %}
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}
+                                        {{ checkbox.choice_label }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Colonne 3 : Carburant -->
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label>Carburant :</label>
+                                {% for checkbox in form.fuite_carburant %}
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}
+                                        {{ checkbox.choice_label }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Décision finale ========================= -->
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Décision finale</h5>
+                </div>
+                <div class="card-body">
+                    {% for checkbox in form.decision_finale %}
+                        <div class="form-check">
+                            {{ checkbox.tag }}
+                            {{ checkbox.choice_label }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========================= Observations ========================= -->
+        <div class="col-12 mb-5">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Observations</h5>
+                </div>
+                <div class="card-body">
+                    {{ form.observations }}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========================= Bouton Submit ========================= -->
+        <div class="col-12 text-end mb-5">
+            <button type="submit" class="btn btn-success">Enregistrer l’inspection</button>
+        </div>
+
+    </div>
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const enginSelect = document.getElementById("id_engin");
+    const partiesMobilesSection = document.querySelector(".parties-mobiles-section");
+
+    if (!enginSelect || !partiesMobilesSection) return;
+
+    function togglePartiesMobiles() {
+        const selectedOptionText = enginSelect.options[enginSelect.selectedIndex]?.text?.toLowerCase() || "";
+        if (selectedOptionText.includes("citerne")) {
+            partiesMobilesSection.classList.remove("d-none");
+        } else {
+            partiesMobilesSection.classList.add("d-none");
+        }
+    }
+
+    togglePartiesMobiles(); // au chargement
+    enginSelect.addEventListener("change", togglePartiesMobiles);
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,187 @@
+smart_mining/
+├── manage.py
+│
+├── smartmining_project/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+│
+├── static/
+├── media/
+│
+├── templates/
+│   ├── backend/
+│   │   ├── includes/
+│   │   │   ├── header.html
+│   │   │   ├── sidebar.html
+│   │   │   ├── footer.html
+│   │   │   ├── foot.html
+│   │   │   └── messages.html
+│   │   ├── base.html
+│   │   ├── index.html
+│   │   └── pages/
+│   │       ├── dashboard/
+│   │       │   ├── overview.html
+│   │       │   └── analytics.html
+│   │       ├── engins/
+│   │       │   ├── engins.html
+│   │       │   └── parametrage.html
+│   │       ├── flotte/
+│   │       │   ├── flotte_list.html
+│   │       │   ├── flotte_detail.html
+│   │       │   ├── assurances.html
+│   │       │   ├── controle_technique.html
+│   │       │   ├── vignette_conformite.html
+│   │       │   └── suivi_production.html
+│   │       ├── habilitation/
+│   │       │   ├── identification_employe.html
+│   │       │   ├── formation_chauffeur.html
+│   │       │   ├── suivi_pass_mine.html
+│   │       │   ├── permis_travail.html
+│   │       │   └── comportement_conduite.html
+│   │       ├── personnel/
+│   │       │   ├── liste_employes.html
+│   │       │   ├── profil_employe.html
+│   │       │   └── historique.html
+│   │       ├── parametrage/
+│   │       │   ├── societes.html
+│   │       │   ├── sites.html
+│   │       │   ├── villes.html
+│   │       │   ├── types_engins.html
+│   │       │   └── categories.html
+│   │       ├── administration/
+│   │       │   ├── utilisateurs.html
+│   │       │   ├── roles.html
+│   │       │   └── permissions.html
+│   │       └── hse/                      # 👷 NOUVEL ESPACE HSE
+│   │           ├── epi/
+│   │           │   ├── liste_epi.html
+│   │           │   ├── attribution_epi.html
+│   │           │   └── stock_epi.html
+│   │           ├── equipements/
+│   │           │   ├── liste_equipements.html
+│   │           │   └── calibration.html
+│   │           ├── anomalies/
+│   │           │   ├── liste_anomalies.html
+│   │           │   └── rapport_anomalie.html
+│   │           ├── accidents/
+│   │           │   ├── liste_accidents.html
+│   │           │   └── rapport_accident.html
+│   │           └── monitoring/
+│   │               ├── suivi_air.html
+│   │               ├── suivi_eau.html
+│   │               └── suivi_bruit.html
+│   │
+│   ├── front/
+│   │   ├── includes/
+│   │   ├── base_front.html
+│   │   ├── index_front.html
+│   │   └── pages_front/
+│   │       ├── engins/
+│   │       ├── flotte/
+│   │       ├── habilitation/
+│   │       └── parametrage/
+│
+├── accounts/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── forms.py
+│   └── templates/accounts/
+│
+├── backend/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── admin.py
+│
+├── engins/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── admin.py
+│
+├── flotte/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── admin.py
+│   └── templates/flotte/
+│       ├── flotte_list.html
+│       ├── flotte_detail.html
+│       ├── assurances.html
+│       ├── controle_technique.html
+│       ├── vignette_conformite.html
+│       └── suivi_production.html
+│
+├── personnel/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── admin.py
+│
+├── habilitation/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── admin.py
+│
+├── parametrage/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── admin.py
+│
+├── notifications/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── admin.py
+│
+├── hse_epi/                   # 🦺 Gestion des EPI
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── admin.py
+│   └── templates/hse_epi/
+│       ├── liste_epi.html
+│       └── attribution_epi.html
+│
+├── hse_equipements/           # ⚙️ Gestion des équipements de mesure
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── admin.py
+│   └── templates/hse_equipements/
+│       ├── liste_equipements.html
+│       └── calibration.html
+│
+├── hse_anomalies/             # 🚧 Suivi des anomalies
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── admin.py
+│   └── templates/hse_anomalies/
+│       ├── liste_anomalies.html
+│       └── rapport_anomalie.html
+│
+├── hse_accidents/             # ⚠️ Suivi des accidents/incidents
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── admin.py
+│   └── templates/hse_accidents/
+│       ├── liste_accidents.html
+│       └── rapport_accident.html
+│
+└── hse_monitoring/            # 🌱 Monitoring environnemental
+    ├── models.py
+    ├── views.py
+    ├── urls.py
+    ├── admin.py
+    └── templates/hse_monitoring/
+        ├── suivi_air.html
+        ├── suivi_eau.html
+        └── suivi_bruit.html

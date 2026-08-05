@@ -1,0 +1,116 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Modifier Permis de Travail</h4>
+        <a href="{% url 'habilitation:permis_list' %}" class="btn btn-secondary btn-sm">
+            <i class="ri-arrow-left-line"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Formulaire de mise à jour</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-3">
+
+                        <!-- Employé -->
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label">Employé</label>
+                            {{ form.employe }}
+                            {% for error in form.employe.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Type de Permis -->
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label">Type de Permis</label>
+                            {{ form.type_permis }}
+                            {% for error in form.type_permis.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Responsable -->
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label">Responsable</label>
+                            {{ form.responsable }}
+                            {% for error in form.responsable.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Site d'émission -->
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label">Site d'Émission</label>
+                            {{ form.site_emission }}
+                            {% for error in form.site_emission.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Date d'émission -->
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label">Date d'Émission</label>
+                            {{ form.date_emission }}
+                            {% for error in form.date_emission.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Date d'expiration -->
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label">Date d'Expiration</label>
+                            {{ form.date_expiration }}
+                            {% for error in form.date_expiration.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Observation -->
+                        <div class="col-12">
+                            <label class="form-label">Observation</label>
+                            {{ form.observation }}
+                            {% for error in form.observation.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Fichiers joints -->
+                        <div class="col-12">
+                            <label class="form-label">Fichiers joints</label>
+                            {{ form.fichiers_joints }}
+                            {% for error in form.fichiers_joints.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Boutons -->
+                        <div class="col-12 mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ri-save-line"></i> Mettre à jour
+                            </button>
+                            <a href="{% url 'habilitation:permis_list' %}" class="btn btn-outline-secondary">
+                                Annuler
+                            </a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

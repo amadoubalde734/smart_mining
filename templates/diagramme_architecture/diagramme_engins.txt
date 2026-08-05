@@ -1,0 +1,188 @@
+================================
+ENGINS (statique)
+================================
+┌─────────────┐        ┌──────────────┐
+│ TypeEngin   │◄───────┤ MarqueModele │
+│-------------│        │--------------│
+│ id          │        │ id           │
+│ nom         │        │ marque       │
+│ description │        │ modele       │
+│ slug        │        │ type_engin → │─────────┐
+│ statut      │        │ slug         │         │
+└─────────────┘        │ statut       │         │
+                       └──────────────┘         │
+                                                  ▼
+┌─────────────┐        ┌─────────────┐      ┌───────────────┐
+│ Categorie   │        │ StatutEngin │      │ SiteEngin     │
+│ Engin       │        │-------------│      │---------------│
+│------------ │        │ id          │      │ id            │
+│ id          │        │ nom         │      │ nom_site      │
+│ nom         │        │ description │      │ adresse       │
+│ description │        │ slug        │      │ description   │
+│ slug        │        │ actif       │      │ slug          │
+│ statut      │        └─────────────┘      │ actif         │
+└─────────────┘                              └───────────────┘
+       │                                         ▲
+       │                                         │
+       ▼                                         │
+┌─────────────┐                                  │
+│ Engin       │──────────────┐                   │
+│-------------│              │                   │
+│ id          │              │                   │
+│ immatriculation             │                   │
+│ type_engin →               │                   │
+│ categorie →                │                   │
+│ marque_modele →            │                   │
+│ statut →                   │                   │
+│ site →                     │                   │
+│ slug                        │                   │
+│ actif                       │                   │
+└─────────────┘              │                   │
+
+================================
+FLOTTES (workflow)
+================================
+┌─────────────┐
+│ Assurance   │
+│ Engin       │
+│-------------│
+│ id          │
+│ nom         │
+│ type_assurance│
+│ date_debut  │
+│ date_fin    │
+│ engin →     │
+│ actif       │
+└─────────────┘
+       │
+       ▼
+┌─────────────┐
+│ Vignette    │
+│ Conformité  │
+│-------------│
+│ id          │
+│ engin →     │
+│ date_emission│
+│ date_expire │
+│ type        │
+│ actif       │
+└─────────────┘
+       │
+       ▼
+┌─────────────┐
+│ Controle    │
+│ Technique   │
+│-------------│
+│ id          │
+│ engin →     │
+│ date_controle│
+│ resultat    │
+│ commentaire │
+│ actif       │
+└─────────────┘
+       │
+       ▼
+┌─────────────┐
+│ Suivi       │
+│ Production  │
+│-------------│
+│ id          │
+│ engin →     │
+│ date        │
+│ description │
+│ statut      │
+└─────────────┘
+
+================================
+EMPLOYE
+================================
+┌─────────────┐        ┌─────────────┐      ┌─────────────┐
+│ Departement │◄───────┤ Service     │      │ Ville       │
+│-------------│        │-------------│      │-------------│
+│ id          │        │ id          │      │ id          │
+│ nom         │        │ nom         │      │ pays        │
+│ description │        │ departement→│      │ libelle     │
+│ slug        │        │ description │      │ slug        │
+│ actif       │        │ slug        │      │ statut      │
+└─────────────┘        │ actif       │      └─────────────┘
+                       └─────────────┘
+                             ▲
+                             │
+                             ▼
+┌─────────────┐        ┌─────────────┐
+│ Site        │        │ Employe     │
+│-------------│        │-------------│
+│ id          │        │ id          │
+│ nom_site    │        │ matricule   │
+│ adresse     │        │ nom         │
+│ description │        │ prenoms     │
+│ slug        │        │ date_naiss. │
+│ actif       │        │ lieu_naiss. │
+└─────────────┘        │ sexe        │
+                       │ fonction    │
+                       │ departement→│
+                       │ service →   │
+                       │ site →      │
+                       │ ville →     │
+                       │ email       │
+                       │ telephone   │
+                       │ adresse     │
+                       │ date_embauche│
+                       │ photo       │
+                       │ slug        │
+                       │ actif       │
+                       └─────────────┘
+
+================================
+HABILITATION
+================================
+┌──────────────────────────────┐
+│ IdentificationEmploye        │
+│------------------------------│
+│ id                           │
+│ employe →                    │
+│ date_identification          │
+│ statut                       │
+└──────────────────────────────┘
+
+┌──────────────────────────────┐
+│ FormationChauffeur            │
+│------------------------------│
+│ id                           │
+│ employe →                    │
+│ formation                     │
+│ date_formation               │
+│ statut                       │
+└──────────────────────────────┘
+
+┌──────────────────────────────┐
+│ SuiviPASSMine                 │
+│------------------------------│
+│ id                           │
+│ employe →                    │
+│ pass_number                  │
+│ date_obtention               │
+│ date_expiration              │
+│ statut                       │
+└──────────────────────────────┘
+
+┌──────────────────────────────┐
+│ PermisTravail                │
+│------------------------------│
+│ id                           │
+│ employe →                   │
+│ type_permis                  │
+│ date_debut                   │
+│ date_fin                     │
+│ statut                       │
+└──────────────────────────────┘
+
+┌──────────────────────────────┐
+│ ComportementConduite          │
+│------------------------------│
+│ id                           │
+│ employe →                   │
+│ observation                  │
+│ date                         │
+│ statut                       │
+└──────────────────────────────┘

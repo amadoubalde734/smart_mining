@@ -1,0 +1,209 @@
+{% extends "backend/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>
+        {% if form.instance.pk %}
+            Modifier Formation Chauffeur
+        {% else %}
+            Ajouter Formation Chauffeur
+        {% endif %}
+    </h4>
+    <a href="{% url 'habilitation:formation_list' %}" class="btn btn-outline-secondary btn-sm">
+        <i class="ri-arrow-left-line"></i> Retour à la liste
+    </a>
+</div>
+
+<form method="POST" class="needs-validation" novalidate>
+    {% csrf_token %}
+    
+    <!-- ================= Employé & Références ================= -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Employé & Références</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.employe.label }}</label>
+                    {{ form.employe|add_class:"form-select" }}
+                    {{ form.employe.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.formateur.label }}</label>
+                    {{ form.formateur|add_class:"form-select" }}
+                    {{ form.formateur.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.type_formation.label }}</label>
+                    {{ form.type_formation|add_class:"form-select" }}
+                    {{ form.type_formation.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.site.label }}</label>
+                    {{ form.site|add_class:"form-select" }}
+                    {{ form.site.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.flotte.label }}</label>
+                    {{ form.flotte|add_class:"form-select" }}
+                    {{ form.flotte.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.service.label }}</label>
+                    {{ form.service|add_class:"form-select" }}
+                    {{ form.service.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.categorie_engin.label }}</label>
+                    {{ form.categorie_engin|add_class:"form-select" }}
+                    {{ form.categorie_engin.errors }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= Détails de la formation ================= -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Détails de la formation</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.motif_theme.label }}</label>
+                    {{ form.motif_theme|add_class:"form-control" }}
+                    {{ form.motif_theme.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.organisme.label }}</label>
+                    {{ form.organisme|add_class:"form-control" }}
+                    {{ form.organisme.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.date_formation.label }}</label>
+                    {{ form.date_formation|add_class:"form-control" }}
+                    {{ form.date_formation.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.heure_debut.label }}</label>
+                    {{ form.heure_debut|add_class:"form-control" }}
+                    {{ form.heure_debut.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.heure_fin.label }}</label>
+                    {{ form.heure_fin|add_class:"form-control" }}
+                    {{ form.heure_fin.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.duree_jours.label }}</label>
+                    {{ form.duree_jours|add_class:"form-control" }}
+                    {{ form.duree_jours.errors }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= Qualification & Évaluation ================= -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Qualification & Évaluation</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                
+                <!-- Qualification actuelle -->
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.qualification_actuelle.label }}</label>
+                    {{ form.qualification_actuelle|add_class:"form-select" }}
+                    {{ form.qualification_actuelle.errors }}
+                </div>
+                
+                <!-- Note -->
+                <div class="col-md-2">
+                    <label class="form-label">{{ form.note.label }}</label>
+                    {{ form.note|add_class:"form-select" }}
+                    {{ form.note.errors }}
+                </div>
+                
+                <!-- Appréciation -->
+                <div class="col-md-3">
+                    <label class="form-label">{{ form.appreciation.label }}</label>
+                    {{ form.appreciation|add_class:"form-select" }}
+                    {{ form.appreciation.errors }}
+                </div>
+                
+                <!-- Score -->
+                <div class="col-md-3">
+                    <label class="form-label">{{ form.score.label }}</label>
+                    {{ form.score|add_class:"form-control" }}
+                    {{ form.score.errors }}
+                </div>
+                
+                <!-- Nombre de formation -->
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">{{ form.nombre_formation.label }}</label>
+                    {{ form.nombre_formation|add_class:"form-select" }}
+                    {{ form.nombre_formation.errors }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= Validité & Statut ================= -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">Validité & Statut</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.validite.label }}</label>
+                    {{ form.validite|add_class:"form-control" }}
+                    {{ form.validite.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.jours_avant_expiration.label }}</label>
+                    {{ form.jours_avant_expiration|add_class:"form-control" }}
+                    {{ form.jours_avant_expiration.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.statut.label }}</label>
+                    {{ form.statut|add_class:"form-select" }}
+                    {{ form.statut.errors }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= Observation ================= -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Observation</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.observation|add_class:"form-control" }}
+                {{ form.observation.errors }}
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= Boutons ================= -->
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+            <i class="ri-save-line"></i> Enregistrer
+        </button>
+        <a href="{% url 'habilitation:formation_list' %}" class="btn btn-outline-secondary">
+            Annuler
+        </a>
+    </div>
+</form>
+
+{% endblock %}

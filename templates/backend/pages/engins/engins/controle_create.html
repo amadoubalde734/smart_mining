@@ -1,0 +1,169 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Ajouter un Contrôle Technique</h4>
+        <a href="{% url 'engins:documents_legaux' %}" class="btn btn-secondary btn-sm">
+            <i class="ri-arrow-left-line"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+
+<!-- Formulaire Contrôle Technique -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Formulaire Contrôle Technique</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-3">
+
+                        <!-- Engin -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ form.engin.id_for_label }}" class="form-label">Engin</label>
+                                {{ form.engin }}
+                                {% for error in form.engin.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Date du contrôle -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ form.date_controle.id_for_label }}" class="form-label">Date du Contrôle</label>
+                                {{ form.date_controle }}
+                                {% for error in form.date_controle.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Résultat -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ form.resultat.id_for_label }}" class="form-label">Résultat</label>
+                                {{ form.resultat }}
+                                {% for error in form.resultat.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Inspecteur -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ form.inspecteur.id_for_label }}" class="form-label">Inspecteur</label>
+                                {{ form.inspecteur }}
+                                {% for error in form.inspecteur.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Centre de contrôle -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ form.centre_controle.id_for_label }}" class="form-label">Centre de Contrôle</label>
+                                {{ form.centre_controle }}
+                                {% for error in form.centre_controle.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Validité (mois) -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ form.validite_mois.id_for_label }}" class="form-label">Validité (mois)</label>
+                                {{ form.validite_mois }}
+                                {% for error in form.validite_mois.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Actions correctives -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="{{ form.actions_correctives.id_for_label }}" class="form-label">Actions Correctives</label>
+                                {{ form.actions_correctives }}
+                                {% for error in form.actions_correctives.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Document PDF -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ form.document.id_for_label }}" class="form-label">Document PDF</label>
+                                {{ form.document }}
+                                {% for error in form.document.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Formulaire ajout document -->
+                        <div class="col-12 mt-3">
+                            <h6>Ajouter un document lié</h6>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ doc_form.fichier.id_for_label }}" class="form-label">Fichier</label>
+                                {{ doc_form.fichier }}
+                                {% for error in doc_form.fichier.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ doc_form.titre.id_for_label }}" class="form-label">Titre du document</label>
+                                {{ doc_form.titre }}
+                                {% for error in doc_form.titre.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label for="{{ doc_form.type_document.id_for_label }}" class="form-label">Type de document</label>
+                                {{ doc_form.type_document }}
+                                {% for error in doc_form.type_document.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Boutons -->
+                        <div class="col-12 mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ri-save-line"></i> Enregistrer
+                            </button>
+                            <a href="{% url 'engins:documents_legaux' %}" class="btn btn-outline-secondary">
+                                Annuler
+                            </a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

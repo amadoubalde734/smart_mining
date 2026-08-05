@@ -1,0 +1,189 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- start page title -->
+<div class="row mb-3">
+    <div class="col-6">
+        <h4 class="mb-0">Liste des Fonctions</h4>
+    </div>
+    <div class="col-6 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterFonctionModal">
+            <i class="ri-add-line"></i> Ajouter Fonction
+        </button>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="card">
+    <div class="card-body">
+        <table id="fonctionsTable" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom de la fonction</th>
+                    <th>Service</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fonction in fonctions %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ fonction.nom }}</td>
+                    <td>{{ fonction.service.nom }}</td>
+                    <td>
+                        {% if fonction.actif %}
+                            <span class="badge bg-success">Actif</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactif</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <!-- Modifier -->
+                            <button type="button" class="btn btn-soft-secondary btn-sm btn-modifier"
+                                data-id="{{ fonction.pk }}"
+                                data-nom="{{ fonction.nom }}"
+                                data-service="{{ fonction.service.pk }}"
+                                data-description="{{ fonction.description|default_if_none:'' }}"
+                                data-actif="{{ fonction.actif }}">
+                                <i class="ri-pencil-fill"></i> Modifier
+                            </button>
+
+                            <!-- Supprimer -->
+                            <form id="delete-form-{{ fonction.pk }}" method="POST" action="{% url 'parametrage:supprimer_fonction' fonction.pk %}" style="display:none;">
+                                {% csrf_token %}
+                            </form>
+                            <button type="button" class="btn btn-soft-danger btn-sm btn-delete" data-id="{{ fonction.pk }}">
+                                <i class="ri-delete-bin-fill"></i> Supprimer
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucune fonction trouvée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Ajouter Fonction -->
+<div class="modal fade" id="ajouterFonctionModal" tabindex="-1" aria-labelledby="ajouterFonctionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ajouterFonctionModalLabel">Ajouter Fonction</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'parametrage:ajouter_fonction' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nom_fonction" class="form-label">Nom de la fonction</label>
+                <input type="text" name="nom" class="form-control" id="nom_fonction" required>
+            </div>
+            <div class="mb-3">
+                <label for="service_fonction" class="form-label">Service</label>
+                <select name="service" id="service_fonction" class="form-control" required>
+                    {% for service in services %}
+                        <option value="{{ service.pk }}">{{ service.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="description_fonction" class="form-label">Description</label>
+                <textarea name="description" class="form-control" id="description_fonction" rows="3"></textarea>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif_fonction" checked>
+                <label class="form-check-label" for="actif_fonction">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Modifier Fonction -->
+<div class="modal fade" id="modifierFonctionModal" tabindex="-1" aria-labelledby="modifierFonctionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifierFonctionModalLabel">Modifier Fonction</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="modifierFonctionForm" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nom_fonction_mod" class="form-label">Nom de la fonction</label>
+                <input type="text" name="nom" class="form-control" id="nom_fonction_mod" required>
+            </div>
+            <div class="mb-3">
+                <label for="service_fonction_mod" class="form-label">Service</label>
+                <select name="service" id="service_fonction_mod" class="form-control" required>
+                    {% for service in services %}
+                        <option value="{{ service.pk }}">{{ service.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="description_fonction_mod" class="form-label">Description</label>
+                <textarea name="description" class="form-control" id="description_fonction_mod" rows="3"></textarea>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif_fonction_mod">
+                <label class="form-check-label" for="actif_fonction_mod">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = new bootstrap.Modal(document.getElementById('modifierFonctionModal'));
+
+    document.querySelectorAll('.btn-modifier').forEach(button => {
+        button.addEventListener('click', function () {
+            const fonctionId = this.dataset.id;
+            const nom = this.dataset.nom;
+            const serviceId = this.dataset.service;
+            const description = this.dataset.description;
+            const actif = this.dataset.actif === "True";
+
+            document.getElementById('nom_fonction_mod').value = nom;
+            document.getElementById('service_fonction_mod').value = serviceId;
+            document.getElementById('description_fonction_mod').value = description;
+            document.getElementById('actif_fonction_mod').checked = actif;
+
+            const form = document.getElementById('modifierFonctionForm');
+            form.action = "{% url 'parametrage:modifier_fonction' 0 %}".replace('0', fonctionId);
+
+            modal.show();
+        });
+    });
+
+    // Supprimer
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function () {
+            const fonctionId = this.dataset.id;
+            const form = document.getElementById('delete-form-' + fonctionId);
+            if (confirm('Voulez-vous vraiment supprimer cette fonction ?')) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

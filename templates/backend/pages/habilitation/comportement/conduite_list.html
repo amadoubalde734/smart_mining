@@ -1,0 +1,152 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+
+<div class="row mb-4">
+
+    <!-- Total Évaluations -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Total Évaluations</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ total_evaluations }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                            <i class="bx bx-book text-primary"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Récentes (30j) -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Récentes (30j)</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ recent_evaluations }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="bx bx-timer text-success"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Évaluations Valides -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Valides (score ≥ 50%)</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ valid_evaluations }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                            <i class="bx bx-check-circle text-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scores Faibles -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Scores Faibles (<50%)</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ low_score_evaluations }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-danger-subtle rounded fs-3">
+                            <i class="bx bx-x-circle text-danger"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Liste des Évaluations Conduite</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+          
+          <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Employés</h5>
+                <div>
+                   <a href="{% url 'habilitation:conduite_create' %}" class="btn btn-success">
+                    <i class="ri-add-line align-bottom me-1"></i> Ajouter une évaluation
+                </a>
+                </div>
+            </div>
+            <div class="card-body table-responsive">
+                <table id="buttons-datatables" class="display table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Employé</th>
+                            <th>Date Évaluation</th>
+                            <th>Évaluation</th>
+                            <th>Score</th>
+                            <th>Observation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in comportements %}
+                        <tr>
+                            <td>{{ c.employe.nom }} {{ c.employe.prenoms }}</td>
+                            <td>{{ c.date_evaluation }}</td>
+                            <td>{{ c.evaluation }}</td>
+                            <td>{{ c.score|default:"-" }}</td>
+                            <td>{{ c.observation|default:"-" }}</td>
+                            <td>
+                                <div class="dropdown d-inline-block">
+                                    <button class="btn btn-soft-secondary btn-sm" type="button" data-bs-toggle="dropdown">
+                                        <i class="ri-more-fill"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a href="{% url 'habilitation:conduite_update' c.slug %}" class="dropdown-item edit-btn"><i class="ri-pencil-fill text-muted me-2"></i> Modifier</a></li>
+                                        <li><a href="{% url 'habilitation:conduite_delete' c.slug %}" class="dropdown-item delete-btn"><i class="ri-delete-bin-fill text-muted me-2"></i> Supprimer</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center">Aucune évaluation trouvée</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'backend/includes/sweetalert_list.html' %}
+
+{% endblock %}

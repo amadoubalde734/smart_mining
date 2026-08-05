@@ -1,0 +1,66 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Ajouter un Type d'Engin</h4>
+        <a href="{% url 'engins:type_list' %}" class="btn btn-secondary btn-sm">
+            <i class="ri-arrow-left-line"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Informations sur le type d'engin</h5>
+                </div>
+                <div class="card-body row g-3">
+                    <!-- Nom du type d'engin -->
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label">Nom</label>
+                        {{ form.nom }}
+                        {% for error in form.nom.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        {{ form.description }}
+                        {% for error in form.description.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Actif -->
+                    <div class="col-md-6 col-lg-4 form-check mt-4">
+                        {{ form.actif }}
+                        <label class="form-check-label">Actif</label>
+                        {% for error in form.actif.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="col-12 mb-5">
+            <button type="submit" class="btn btn-primary">
+                <i class="ri-save-line"></i> Enregistrer
+            </button>
+            <a href="{% url 'engins:type_list' %}" class="btn btn-outline-secondary">Annuler</a>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- titre et bouton ajout -->
+<div class="row mb-3">
+    <div class="col-6">
+        <h4 class="mb-0">Liste des Services</h4>
+    </div>
+    <div class="col-6 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterServiceModal">
+            <i class="ri-add-line"></i> Ajouter Service
+        </button>
+    </div>
+</div>
+
+<!-- tableau des services -->
+<div class="card">
+    <div class="card-body">
+        <table id="servicesTable" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom du service</th>
+                    <th>Département</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ service.nom }}</td>
+                    <td>{{ service.departement.nom }}</td>
+                    <td>
+                        {% if service.actif %}
+                            <span class="badge bg-success">Actif</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactif</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <button type="button" class="btn btn-soft-secondary btn-sm btn-modifier"
+                                data-id="{{ service.pk }}"
+                                data-nom="{{ service.nom }}"
+                                data-departement="{{ service.departement.pk }}"
+                                data-description="{{ service.description|default_if_none:'' }}"
+                                data-actif="{{ service.actif }}">
+                                <i class="ri-pencil-fill"></i> Modifier
+                            </button>
+
+                            <form id="delete-form-{{ service.pk }}" method="POST" action="{% url 'parametrage:supprimer_service' service.pk %}" style="display:none;">
+                                {% csrf_token %}
+                            </form>
+                            <button type="button" class="btn btn-soft-danger btn-sm btn-delete" data-id="{{ service.pk }}">
+                                <i class="ri-delete-bin-fill"></i> Supprimer
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucun service trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Ajouter Service -->
+<div class="modal fade" id="ajouterServiceModal" tabindex="-1" aria-labelledby="ajouterServiceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ajouterServiceModalLabel">Ajouter Service</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'parametrage:ajouter_service' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nom_service" class="form-label">Nom du service</label>
+                <input type="text" name="nom" class="form-control" id="nom_service" required>
+            </div>
+            <div class="mb-3">
+                <label for="departement_service" class="form-label">Département</label>
+                <select name="departement" class="form-control" id="departement_service" required>
+                    {% for departement in departements %}
+                        <option value="{{ departement.pk }}">{{ departement.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="description_service" class="form-label">Description</label>
+                <textarea name="description" class="form-control" id="description_service" rows="3"></textarea>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif_service" checked>
+                <label class="form-check-label" for="actif_service">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Modifier Service -->
+<div class="modal fade" id="modifierServiceModal" tabindex="-1" aria-labelledby="modifierServiceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifierServiceModalLabel">Modifier Service</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="modifierServiceForm" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nom_service_mod" class="form-label">Nom du service</label>
+                <input type="text" name="nom" class="form-control" id="nom_service_mod" required>
+            </div>
+            <div class="mb-3">
+                <label for="departement_service_mod" class="form-label">Département</label>
+                <select name="departement" class="form-control" id="departement_service_mod" required>
+                    {% for departement in departements %}
+                        <option value="{{ departement.pk }}">{{ departement.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="description_service_mod" class="form-label">Description</label>
+                <textarea name="description" class="form-control" id="description_service_mod" rows="3"></textarea>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif_service_mod">
+                <label class="form-check-label" for="actif_service_mod">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = new bootstrap.Modal(document.getElementById('modifierServiceModal'));
+
+    // Pré-remplir modal modifier
+    document.querySelectorAll('.btn-modifier').forEach(button => {
+        button.addEventListener('click', function () {
+            const serviceId = this.dataset.id;
+            const nom = this.dataset.nom;
+            const departementId = this.dataset.departement;
+            const description = this.dataset.description;
+            const actif = this.dataset.actif === "True";
+
+            document.getElementById('nom_service_mod').value = nom;
+            document.getElementById('departement_service_mod').value = departementId;
+            document.getElementById('description_service_mod').value = description;
+            document.getElementById('actif_service_mod').checked = actif;
+
+            const form = document.getElementById('modifierServiceForm');
+            form.action = "{% url 'parametrage:modifier_service' 0 %}".replace('0', serviceId);
+
+            modal.show();
+        });
+    });
+
+    // Supprimer
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function () {
+            const serviceId = this.dataset.id;
+            const form = document.getElementById('delete-form-' + serviceId);
+            if (confirm('Voulez-vous vraiment supprimer ce service ?')) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

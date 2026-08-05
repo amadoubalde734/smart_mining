@@ -1,0 +1,203 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Liste des Inspections</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Total Inspections -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Total Inspections</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ total_inspections }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                            <i class="bx bx-clipboard text-primary"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aptes -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Aptes</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ active_inspections }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="bx bx-check-circle text-success"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Non aptes -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Non aptes</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ inactive_inspections }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-danger-subtle rounded fs-3">
+                            <i class="bx bx-x-circle text-danger"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Récentes (30j) -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Inspectées récemment (30j)</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ recent_inspections }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                            <i class="bx bx-timer text-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Inspections</h5>
+                <div>
+                    <a href="{% url 'engins:inspection_create' %}" class="btn btn-success">
+                        <i class="ri-add-line align-bottom me-1"></i> Nouvelle inspection
+                    </a>
+                </div>
+            </div>
+            <div class="card-body table-responsive">
+                <table id="datatable-buttons" class="display table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Numéro</th>
+                            <th>Partie</th>
+                            <th>Engin / Remorque</th>
+                            <th>Chauffeur</th>
+                            <th>Responsable</th>
+                            <th>Décision</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inspection in page_obj %}
+                        <tr>
+                            <td>{{ inspection.date_inspection }}</td>
+                            <td>{{ inspection.numero_inspection }}</td>
+                            <td>{{ inspection.get_partie_display }}</td>
+                            <td>
+                                {% if inspection.partie == 'tracteur' %}
+                                    {{ inspection.engin.immatriculation|default:"-" }}
+                                {% else %}
+                                    {{ inspection.remorque.immatriculation|default:"-" }}
+                                {% endif %}
+                            </td>
+                            <td>{{ inspection.chauffeur.get_full_name|default:"-" }}</td>
+                            <td>{{ inspection.responsable.get_full_name|default:"-" }}</td>
+                            <td>{{ inspection.get_decision_finale_display }}</td>
+                            <td>
+                                <div class="dropdown d-inline-block">
+                                    <button class="btn btn-soft-secondary btn-sm" type="button" data-bs-toggle="dropdown">
+                                        <i class="ri-more-fill"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a href="{% url 'inspections:inspection_update' inspection.slug %}" class="dropdown-item">
+                                                <i class="ri-pencil-fill text-muted me-2"></i> Modifier
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'inspections:inspection_delete' inspection.slug %}" class="dropdown-item">
+                                                <i class="ri-delete-bin-fill text-muted me-2"></i> Supprimer
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'inspections:inspection_detail' inspection.slug %}" class="dropdown-item">
+                                                <i class="ri-eye-fill text-muted me-2"></i> Voir
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Aucune inspection trouvée</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="mt-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">Précédent</span></li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">Suivant</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'backend/includes/sweetalert_list.html' %}
+{% endblock %}

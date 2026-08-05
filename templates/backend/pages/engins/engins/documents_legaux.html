@@ -1,0 +1,68 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Suivi des documents légaux</h4>
+    </div>
+</div>
+
+<!-- Nav tabs -->
+<div class="row">
+    <div class="col-12">
+        <ul class="nav nav-tabs" id="documentsTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="assurances-tab" data-bs-toggle="tab" data-bs-target="#assurances" type="button" role="tab" aria-controls="assurances" aria-selected="true">
+                    Assurances
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="vignettes-tab" data-bs-toggle="tab" data-bs-target="#vignettes" type="button" role="tab" aria-controls="vignettes" aria-selected="false">
+                    Vignettes
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="controles-tab" data-bs-toggle="tab" data-bs-target="#controles" type="button" role="tab" aria-controls="controles" aria-selected="false">
+                    Contrôles Techniques
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="certificats-tab" data-bs-toggle="tab" data-bs-target="#certificats" type="button" role="tab" aria-controls="certificats" aria-selected="false">
+                    Certificats de Jaugeage
+                </button>
+            </li>
+            <!-- NOUVEL ONGLET CARTE GRISE -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cartes-tab" data-bs-toggle="tab" data-bs-target="#cartes" type="button" role="tab" aria-controls="cartes" aria-selected="false">
+                    Cartes Grises
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="assurances" role="tabpanel" aria-labelledby="assurances-tab">
+                {% include 'backend/pages/engins/engins/assurance_list.html' %}
+            </div>
+            <div class="tab-pane fade" id="vignettes" role="tabpanel" aria-labelledby="vignettes-tab">
+                {% include 'backend/pages/engins/engins/vignette_conformite.html' %}
+            </div>
+            <div class="tab-pane fade" id="controles" role="tabpanel" aria-labelledby="controles-tab">
+                {% include 'backend/pages/engins/engins/controle_technique_list.html' %}
+            </div>
+            <div class="tab-pane fade" id="certificats" role="tabpanel" aria-labelledby="certificats-tab">
+                {% include 'backend/pages/engins/engins/certificat_jaugeage_list.html' %}
+            </div>
+            <!-- NOUVEAU CONTENU CARTE GRISE -->
+            <div class="tab-pane fade" id="cartes" role="tabpanel" aria-labelledby="cartes-tab">
+                {% include 'backend/pages/engins/engins/carte_grise_list.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

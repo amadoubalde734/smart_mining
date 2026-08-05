@@ -1,0 +1,139 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- start page title -->
+<div class="row mb-3">
+    <div class="col-6">
+        <h4 class="mb-0">Liste des Villes</h4>
+    </div>
+    <div class="col-6 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterVilleModal">
+            <i class="ri-add-line"></i> Ajouter Ville
+        </button>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="card">
+    <div class="card-body">
+        <table id="villesTable" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Pays</th>
+                    <th>Ville</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ville in villes %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ ville.pays }}</td>
+                    <td>{{ ville.libelle }}</td>
+                    <td>
+                        {% if ville.actif %}
+                            <span class="badge bg-success">Actif</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactif</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <!-- Modifier -->
+                            <button type="button" class="btn btn-soft-secondary btn-sm btn-modifier"
+                                data-id="{{ ville.pk }}"
+                                data-libelle="{{ ville.libelle }}"
+                                data-pays="{{ ville.pays }}"
+                                data-actif="{{ ville.actif }}">
+                                <i class="ri-pencil-fill"></i> Modifier
+                            </button>
+
+                            <!-- Supprimer -->
+                            <form id="delete-form-{{ ville.pk }}" method="POST" action="{% url 'parametrage:supprimer_ville' ville.pk %}" style="display:none;">
+                                {% csrf_token %}
+                            </form>
+                            <button type="button" class="btn btn-soft-danger btn-sm btn-delete" data-id="{{ ville.pk }}">
+                                <i class="ri-delete-bin-fill"></i> Supprimer
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucune ville trouvée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Ajouter Ville -->
+<div class="modal fade" id="ajouterVilleModal" tabindex="-1" aria-labelledby="ajouterVilleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ajouterVilleModalLabel">Ajouter Ville</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'parametrage:ajouter_ville' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="pays" class="form-label">Pays</label>
+                <input type="text" name="pays" class="form-control" id="pays" required>
+            </div>
+            <div class="mb-3">
+                <label for="libelle" class="form-label">Nom de la ville</label>
+                <input type="text" name="libelle" class="form-control" id="libelle" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif" checked>
+                <label class="form-check-label" for="actif">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Modifier Ville -->
+<div class="modal fade" id="modifierVilleModal" tabindex="-1" aria-labelledby="modifierVilleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifierVilleModalLabel">Modifier Ville</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="modifierVilleForm" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="pays_mod" class="form-label">Pays</label>
+                <input type="text" name="pays" class="form-control" id="pays_mod" required>
+            </div>
+            <div class="mb-3">
+                <label for="libelle_mod" class="form-label">Nom de la ville</label>
+                <input type="text" name="libelle" class="form-control" id="libelle_mod" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif_mod">
+                <label class="form-check-label" for="actif_mod">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS pour modifier et supprimer -->
+
+
+{% endblock %}

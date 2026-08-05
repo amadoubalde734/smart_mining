@@ -1,0 +1,69 @@
+{% load static %}
+<!doctype html>
+<html lang="en"
+      data-layout="vertical"
+      data-topbar="light"
+      data-sidebar="dark"
+      data-sidebar-size="sm-hover"
+      data-sidebar-image="none"
+      data-preloader="disable">
+
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %} SmartMining {% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Themesbrand" name="author" />
+
+    <link rel="shortcut icon" href="{% static 'backend/assets/images/favicon.ico' %}">
+
+    <link href="{% static 'backend/assets/libs/jsvectormap/jsvectormap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'backend/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" />
+
+    <link href="{% static 'backend/assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'backend/assets/css/icons.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'backend/assets/css/app.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'backend/assets/css/custom.min.css' %}" rel="stylesheet" />
+
+    <script src="{% static 'backend/assets/js/layout.js' %}"></script>
+
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+</head>
+
+<body>
+
+    <div id="layout-wrapper">
+
+        {% include 'backend/includes/header.html' %}
+        {% include 'backend/includes/removenotif_modal.html' %}
+
+        <div class="app-menu navbar-menu">
+            {% include 'backend/includes/sidebar.html' %}
+        </div>
+
+        <div class="main-content">
+
+            {% block content %}
+            <!-- LA STRUCTURE page-content ET container-fluid RESTE ICI -->
+            <div class="page-content">
+                <div class="container-fluid">
+                    {% block inner_content %}{% endblock %}
+                </div>
+            </div>
+            {% endblock %}
+
+        </div>
+
+    </div>
+
+    {% include 'backend/includes/footer.html' %}
+    {% include 'backend/includes/theme_customiser.html' %}
+    {% include 'backend/includes/foot.html' %}
+
+</body>
+</html>

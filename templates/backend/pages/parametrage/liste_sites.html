@@ -1,0 +1,139 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- start page title -->
+<div class="row mb-3">
+    <div class="col-6">
+        <h4 class="mb-0">Liste des Sites</h4>
+    </div>
+    <div class="col-6 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterSiteModal">
+            <i class="ri-add-line"></i> Ajouter Site
+        </button>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="card">
+    <div class="card-body">
+        <table id="sitesTable" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom du site</th>
+                    <th>Adresse</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for site in sites %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ site.nom_site }}</td>
+                    <td>{{ site.adresse }}</td>
+                    <td>
+                        {% if site.actif %}
+                            <span class="badge bg-success">Actif</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactif</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <!-- Modifier -->
+                            <button type="button" class="btn btn-soft-secondary btn-sm btn-modifier"
+                                data-id="{{ site.pk }}"
+                                data-nom="{{ site.nom_site }}"
+                                data-adresse="{{ site.adresse }}"
+                                data-actif="{{ site.actif }}">
+                                <i class="ri-pencil-fill"></i> Modifier
+                            </button>
+
+                            <!-- Supprimer -->
+                            <form id="delete-form-{{ site.pk }}" method="POST" action="{% url 'parametrage:supprimer_site' site.pk %}" style="display:none;">
+                                {% csrf_token %}
+                            </form>
+                            <button type="button" class="btn btn-soft-danger btn-sm btn-delete" data-id="{{ site.pk }}">
+                                <i class="ri-delete-bin-fill"></i> Supprimer
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucun site trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Ajouter Site -->
+<div class="modal fade" id="ajouterSiteModal" tabindex="-1" aria-labelledby="ajouterSiteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ajouterSiteModalLabel">Ajouter Site</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'parametrage:ajouter_site' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nom_site" class="form-label">Nom du site</label>
+                <input type="text" name="nom_site" class="form-control" id="nom_site" required>
+            </div>
+            <div class="mb-3">
+                <label for="adresse" class="form-label">Adresse</label>
+                <input type="text" name="adresse" class="form-control" id="adresse" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif" checked>
+                <label class="form-check-label" for="actif">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Modifier Site -->
+<div class="modal fade" id="modifierSiteModal" tabindex="-1" aria-labelledby="modifierSiteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifierSiteModalLabel">Modifier Site</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="modifierSiteForm" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nom_site_mod" class="form-label">Nom du site</label>
+                <input type="text" name="nom_site" class="form-control" id="nom_site_mod" required>
+            </div>
+            <div class="mb-3">
+                <label for="adresse_mod" class="form-label">Adresse</label>
+                <input type="text" name="adresse" class="form-control" id="adresse_mod" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif_mod">
+                <label class="form-check-label" for="actif_mod">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS pour Modifier/Supprimer -->
+
+
+{% endblock %}

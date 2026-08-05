@@ -1,0 +1,370 @@
+{% load static %}
+<!-- ========== App Menu ========== -->
+{% comment %} <div class="navbar-brand-box">
+    <!-- Logos -->
+    <a href="{% url 'backend:dashboard' %}" class="logo logo-dark">
+        <span class="logo-sm"><img src="{% static 'backend/assets/images/logo-sm.png' %}" alt="" height="22"></span>
+        <span class="logo-lg"><img src="{% static 'backend/assets/images/logo-dark.png' %}" alt="" height="17"></span>
+    </a>
+    <a href="{% url 'backend:dashboard' %}" class="logo logo-light">
+        <span class="logo-sm"><img src="{% static 'backend/assets/images/logo-sm.png' %}" alt="" height="22"></span>
+        <span class="logo-lg"><img src="{% static 'backend/assets/images/logo-light.png' %}" alt="" height="17"></span>
+    </a>
+    <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+        <i class="ri-record-circle-line"></i>
+    </button>
+</div> {% endcomment %}
+<div class="navbar-brand-box">
+    <!-- Logo pour fond clair -->
+    <a href="{% url 'backend:dashboard' %}" class="logo logo-dark">
+        <!-- Petit logo -->
+        <span class="logo-sm">
+            <img src="{% static 'backend/assets/images/fms-logo-sm.png' %}" alt="FMS" height="22">
+        </span>
+        <!-- Grand logo -->
+        <span class="logo-lg">
+            <!-- Tu peux remplacer l'image par du texte stylé si tu veux -->
+            <!-- <span class="fw-bold fs-4 text-primary">Fleet Mining Service</span> -->
+            <img src="{% static 'backend/assets/images/fms-logo.png' %}" alt="Fleet Mining Service" height="40">
+        </span>
+    </a>
+
+    <!-- Logo pour fond sombre -->
+    <a href="{% url 'backend:dashboard' %}" class="logo logo-light">
+        <span class="logo-sm">
+            <img src="{% static 'backend/assets/images/fms-logo-sm.png' %}" alt="FMS" height="22">
+        </span>
+        <span class="logo-lg">
+            <!-- Texte stylé pour fond sombre -->
+            <!-- <span class="fw-bold fs-4 text-white">Fleet Mining Service</span> -->
+            <img src="{% static 'backend/assets/images/fms-logo.png' %}" alt="Fleet Mining Service" height="40">
+        </span>
+    </a>
+
+    <!-- Bouton vertical hover -->
+    <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+        <i class="ri-record-circle-line"></i>
+    </button>
+</div>
+
+
+<div id="scrollbar">
+    <div class="container-fluid">
+        <div id="two-column-menu"></div>
+
+        <ul class="navbar-nav" id="navbar-nav">
+            <!-- Dashboard -->
+            <li class="menu-title"><span data-key="t-menu">Menu</span></li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="{% url 'backend:dashboard' %}">
+                    <i class="las la-tachometer-alt"></i> <span data-key="t-dashboard">Vue d’ensemble</span>
+                </a>
+            </li>
+
+            <!-- Personnel -->
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarPersonnels" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPersonnels">
+                    <i class="las la-users"></i> <span>Gestion Personnels</span>
+                </a>
+                <div class="collapse menu-dropdown" id="sidebarPersonnels">
+                <ul class="nav nav-sm flex-column">
+                    <li class="nav-item">
+                        <a href="{% url 'personnel:employe_dashboard' %}" class="nav-link">
+                            <i class="las la-user"></i> Dashboard des Employés
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'personnel:employe_list' %}" class="nav-link">
+                            <i class="las la-user"></i> Liste des Employés
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'personnel:employe_profil' slug='dummy-slug' %}" class="nav-link">
+                            <i class="las la-id-badge"></i> Profil Employé
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'personnel:employe_historique' slug='dummy-slug' %}" class="nav-link">
+                            <i class="las la-history"></i> Historique
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            </li>
+
+            <!-- Habilitation -->
+           <li class="nav-item">
+            <a class="nav-link menu-link" href="#sidebarHabilitation" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarHabilitation">
+                <i class="las la-id-card"></i> <span>Gestion Habilitation</span>
+            </a>
+            <div class="collapse menu-dropdown" id="sidebarHabilitation">
+                <ul class="nav nav-sm flex-column">
+                    <!-- Dashboard Habilitation -->
+                    <li class="nav-item">
+                        <a href="{% url 'habilitation:dashboard_habilitation' %}" class="nav-link">
+                            <i class="las la-tachometer-alt"></i> Dashboard Habilitation
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{% url 'habilitation:formation_list' %}" class="nav-link">
+                            <i class="las la-chalkboard-teacher"></i> Formation Chauffeur
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'habilitation:pass_list' %}" class="nav-link">
+                            <i class="las la-passport"></i> Suivi PASS MINE
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'habilitation:permis_list' %}" class="nav-link">
+                            <i class="las la-address-card"></i> Permis de travail
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'habilitation:conduite_list' %}" class="nav-link">
+                            <i class="las la-car-side"></i> Comportement de conduite
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'habilitation:historique_list' %}" class="nav-link">
+                            <i class="las la-history"></i> Historique Habilitation
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+            <!-- Gestion Engins -->
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarEngins" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEngins">
+                    <i class="las la-cogs"></i> <span>Gestion Engins</span>
+                </a>
+                <div class="collapse menu-dropdown" id="sidebarEngins">
+                    <ul class="nav nav-sm flex-column">
+
+                        <!-- Dashboard Engins -->
+                        <li class="nav-item">
+                            <a href="{% url 'engins:dashboard_engins' %}" class="nav-link">
+                                <i class="las la-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                         <!-- Liste des Engins -->
+                        <li class="nav-item">
+                            <a href="{% url 'engins:engin_list' %}" class="nav-link">
+                                <i class="las la-list-alt"></i> Liste des Engins
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a href="{% url 'engins:inspection_list' %}" class="nav-link">
+                                <i class="las la-clipboard-list"></i> Suivi Inspection
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a href="{% url 'engins:evenement_list' %}" class="nav-link">
+                                <i class="las la-clipboard-list"></i> Evenements & Interventions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'engins:documents_legaux' %}" class="nav-link">
+                                <i class="las la-clipboard-list"></i> Suivi des documents légaux 
+                            </a>
+                        </li>
+
+                        <!-- Sous-menu Paramétrage -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarEnginsParam" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEnginsParam">
+                                <i class="las la-sliders-h"></i> Paramétrage
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarEnginsParam">
+                                <ul class="nav nav-sm flex-column">
+                                   
+                                    <!-- Types d'Engins -->
+                                    <li class="nav-item">
+                                        <a href="{% url 'engins:type_list' %}" class="nav-link">
+                                            <i class="las la-cogs"></i> Types d'Engins
+                                        </a>
+                                    </li>
+                                    <!-- Catégories -->
+                                    <li class="nav-item">
+                                        <a href="{% url 'engins:categorie_list' %}" class="nav-link">
+                                            <i class="las la-layer-group"></i> Catégories
+                                        </a>
+                                    </li>
+                                    <!-- Marques / Modèles -->
+                                    <li class="nav-item">
+                                        <a href="{% url 'engins:marque_list' %}" class="nav-link">
+                                            <i class="las la-tag"></i> Marques 
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{% url 'engins:modele_list' %}" class="nav-link">
+                                            <i class="las la-cube"></i> Modèles
+                                        </a>
+                                    </li>
+                                    <!-- Statuts -->
+                                    <li class="nav-item">
+                                        <a href="{% url 'engins:statut_list' %}" class="nav-link">
+                                            <i class="las la-check-circle"></i> Statuts
+                                        </a>
+                                    </li>
+                                    <!-- Sites / Dépôts -->
+                                    <li class="nav-item">
+                                        <a href="{% url 'engins:site_list' %}" class="nav-link">
+                                            <i class="las la-warehouse"></i> Sites / Dépôts
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarCommercial"
+                data-bs-toggle="collapse" role="button"
+                aria-expanded="false" aria-controls="sidebarCommercial">
+                    <i class="las la-handshake"></i>
+                    <span>Gestion Commerciale</span>
+                </a>
+
+                <div class="collapse menu-dropdown" id="sidebarCommercial">
+                    <ul class="nav nav-sm flex-column">
+
+                        <!-- Bons de Commande -->
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="las la-list"></i>
+                                Bons de Commande
+                            </a>
+                        </li>
+
+                        <!-- Bons de Livraison -->
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="las la-file-contract"></i>
+                                Bons de Livraison
+                            </a>
+                        </li>
+
+                        <!-- Paramétrage -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarCommercialParam"
+                            data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarCommercialParam">
+                                <i class="las la-cogs"></i>
+                                <span>Paramétrage</span>
+                            </a>
+
+                            <div class="collapse menu-dropdown" id="sidebarCommercialParam">
+                                <ul class="nav nav-sm flex-column ms-3">
+
+                                    <!-- TVA -->
+                                    <li class="nav-item">
+                                        <a href="" class="nav-link">
+                                            <i class="las la-percentage"></i>
+                                            TVA
+                                        </a>
+                                    </li>
+
+                                    
+
+                                </ul>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarProduction"
+                data-bs-toggle="collapse" role="button"
+                aria-expanded="false" aria-controls="sidebarProduction">
+                    <i class="las la-industry"></i> <span>Suivi Production</span>
+                </a>
+                <div class="collapse menu-dropdown" id="sidebarProduction">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="las la-list"></i> Liste Productions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="las la-plus-circle"></i> Ajouter Production
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Flottes -->
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarFlotte" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarFlotte">
+                    <i class="las la-truck"></i> <span>Gestion Flottes</span>
+                </a>
+                <div class="collapse menu-dropdown" id="sidebarFlotte">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item"><a href="{% url 'flotte:flotte_list' %}" class="nav-link"><i class="las la-list"></i> Liste Flottes</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Fournisseurs -->
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarFournisseur" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarFournisseur">
+                    <i class="las la-truck"></i> <span>Gestion Fournisseurs</span>
+                </a>
+                <div class="collapse menu-dropdown" id="sidebarFournisseur">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item"><a href="" class="nav-link"><i class="las la-list"></i> Liste des Fournisseurs</a></li>
+                        <li class="nav-item"><a href="" class="nav-link"><i class="las la-sliders-h"></i> Paramétrage Fournisseurs</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- HSE -->
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarHSE" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarHSE">
+                    <i class="las la-hard-hat"></i> <span>Gestion HSE</span>
+                </a>
+                <div class="collapse menu-dropdown" id="sidebarHSE">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item"><a href="" class="nav-link"><i class="las la-shield-alt"></i> EPI & Équipements</a></li>
+                        <li class="nav-item"><a href="" class="nav-link"><i class="las la-ambulance"></i> Accidents & Incidents</a></li>
+                        <li class="nav-item"><a href="" class="nav-link"><i class="las la-user-check"></i> Visites de Sécurité</a></li>
+                        <li class="nav-item"><a href="" class="nav-link"><i class="las la-clipboard-list"></i> Audits & Inspections</a></li>
+                        <li class="nav-item"><a href="" class="nav-link"><i class="las la-chart-bar"></i> Statistiques HSE</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Paramétrage -->
+            <li class="menu-title"><i class="las la-tools"></i> <span>Paramétrage</span></li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarParametrage" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarParametrage">
+                    <i class="las la-tools"></i> <span>Paramètres</span>
+                </a>
+                <div class="collapse menu-dropdown" id="sidebarParametrage">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item"><a href="{% url 'parametrage:liste_societes' %}" class="nav-link"><i class="las la-building"></i> Sociétés</a></li>
+                        <li class="nav-item"><a href="{% url 'parametrage:liste_sites' %}" class="nav-link"><i class="las la-map-marked-alt"></i> Sites</a></li>
+                        <li class="nav-item"><a href="{% url 'parametrage:liste_villes' %}" class="nav-link"><i class="las la-city"></i> Villes</a></li>
+                        <li class="nav-item"><a href="{% url 'parametrage:liste_departements' %}" class="nav-link"><i class="las la-building"></i> Départements</a></li>
+                        <li class="nav-item"><a href="{% url 'parametrage:liste_services' %}" class="nav-link"><i class="las la-cogs"></i> Services</a></li>
+                        <li class="nav-item"><a href="{% url 'parametrage:liste_fonctions' %}" class="nav-link"><i class="las la-user-tie"></i> Fonctions</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link"><i class="las la-user"></i> Utilisateurs</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link"><i class="las la-user-tag"></i> Rôles</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link"><i class="las la-key"></i> Permissions</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="sidebar-background"></div>
+<div class="vertical-overlay"></div>

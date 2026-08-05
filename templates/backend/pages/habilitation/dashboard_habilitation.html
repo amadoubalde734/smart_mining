@@ -1,0 +1,102 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- =========================
+     FILTRE PAR DATE
+============================== -->
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label for="start_date" class="form-label">Date de début</label>
+        <input type="date" name="start_date" id="start_date" class="form-control" 
+               value="{{ start_date|default_if_none:'' }}">
+    </div>
+    <div class="col-md-3">
+        <label for="end_date" class="form-label">Date de fin</label>
+        <input type="date" name="end_date" id="end_date" class="form-control"
+               value="{{ end_date|default_if_none:'' }}">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+       <a href="{% url 'habilitation:dashboard_habilitation' %}" class="btn btn-secondary w-100">Réinitialiser</a>
+
+    </div>
+</form>
+
+<!-- =========================
+     DASHBOARD HABILITATION
+============================== -->
+
+{% for section in sections %}
+<h4 class="mb-3">{{ section.title }}</h4>
+<div class="row mb-4">
+    {% for stat in section.stats %}
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">{{ stat.title }}</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ stat.value }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-{{ stat.color }}-subtle rounded fs-3">
+                            <i class="bx {{ stat.icon }} text-{{ stat.color }}"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <canvas id="chart-{{ section.id }}" width="400" height="250"></canvas>
+    </div>
+</div>
+
+<script>
+var ctx_{{ section.id }} = document.getElementById('chart-{{ section.id }}').getContext('2d');
+new Chart(ctx_{{ section.id }}, {
+    type: '{{ section.chart_type }}',
+    data: {
+        labels: {{ section.chart_labels|safe }},
+        datasets: [{
+            {% if section.chart_type == 'bar' %}
+            label: '{{ section.chart_label }}',
+            {% endif %}
+            data: {{ section.chart_data|safe }},
+            backgroundColor: {{ section.chart_colors|safe }}
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                {% if section.chart_type == 'bar' %}
+                display: false
+                {% else %}
+                position: 'bottom'
+                {% endif %}
+            }
+        },
+        scales: {
+            {% if section.chart_type == 'bar' %}
+            y: { beginAtZero: true }
+            {% endif %}
+        }
+    }
+});
+</script>
+{% endfor %}
+
+{% endblock %}

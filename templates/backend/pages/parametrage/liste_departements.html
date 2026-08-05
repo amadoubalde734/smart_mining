@@ -1,0 +1,184 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- start page title -->
+<div class="row mb-3">
+    <div class="col-6">
+        <h4 class="mb-0">Liste des Départements</h4>
+    </div>
+    <div class="col-6 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterDepartementModal">
+            <i class="ri-add-line"></i> Ajouter Département
+        </button>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="card">
+    <div class="card-body">
+        <table id="departementsTable" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom du département</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for departement in departements %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ departement.nom }}</td>
+                    <td>
+                        {% if departement.actif %}
+                            <span class="badge bg-success">Actif</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactif</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <!-- Modifier -->
+                            <button type="button" class="btn btn-soft-secondary btn-sm btn-modifier"
+                                data-id="{{ departement.pk }}"
+                                data-nom="{{ departement.nom }}"
+                                data-actif="{{ departement.actif }}">
+                                <i class="ri-pencil-fill"></i> Modifier
+                            </button>
+
+                            <!-- Supprimer -->
+                            <form id="delete-form-{{ departement.pk }}" method="POST" action="{% url 'parametrage:supprimer_departement' departement.pk %}" style="display:none;">
+                                {% csrf_token %}
+                            </form>
+
+                            <!-- Activer / Désactiver -->
+                            <form id="toggle-form-{{ departement.pk }}" method="POST" action="{% url 'parametrage:toggle_departement' departement.pk %}" style="display:none;">
+                                {% csrf_token %}
+                            </form>
+                            <button type="button" class="btn btn-soft-warning btn-sm btn-toggle"
+                                    data-id="{{ departement.pk }}"
+                                    data-actif="{{ departement.actif }}">
+                                {% if departement.actif %}
+                                    <i class="ri-eye-off-line"></i> Désactiver
+                                {% else %}
+                                    <i class="ri-eye-line"></i> Activer
+                                {% endif %}
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">Aucun département trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Ajouter Département -->
+<div class="modal fade" id="ajouterDepartementModal" tabindex="-1" aria-labelledby="ajouterDepartementModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ajouterDepartementModalLabel">Ajouter Département</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'parametrage:ajouter_departement' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nom_departement" class="form-label">Nom du département</label>
+                <input type="text" name="nom" class="form-control" id="nom_departement" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif" checked>
+                <label class="form-check-label" for="actif">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Modifier Département -->
+<div class="modal fade" id="modifierDepartementModal" tabindex="-1" aria-labelledby="modifierDepartementModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifierDepartementModalLabel">Modifier Département</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="modifierDepartementForm" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nom_departement_mod" class="form-label">Nom du département</label>
+                <input type="text" name="nom" class="form-control" id="nom_departement_mod" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="actif" class="form-check-input" id="actif_mod">
+                <label class="form-check-label" for="actif_mod">Actif</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS pour Modifier / Supprimer / Toggle -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = new bootstrap.Modal(document.getElementById('modifierDepartementModal'));
+
+    // Pré-remplir modal Modifier
+    document.querySelectorAll('.btn-modifier').forEach(button => {
+        button.addEventListener('click', function () {
+            const departementId = this.dataset.id;
+            const nom = this.dataset.nom;
+            const actif = this.dataset.actif === "True";
+
+            document.getElementById('nom_departement_mod').value = nom;
+            document.getElementById('actif_mod').checked = actif;
+
+            const form = document.getElementById('modifierDepartementForm');
+            form.action = "{% url 'parametrage:modifier_departement' 0 %}".replace('0', departementId);
+
+            modal.show();
+        });
+    });
+
+    // Supprimer
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function () {
+            const departementId = this.dataset.id;
+            const form = document.getElementById('delete-form-' + departementId);
+            if (confirm('Voulez-vous vraiment supprimer ce département ?')) {
+                form.submit();
+            }
+        });
+    });
+
+    // Activer / Désactiver
+    document.querySelectorAll('.btn-toggle').forEach(button => {
+        button.addEventListener('click', function () {
+            const departementId = this.dataset.id;
+            const form = document.getElementById('toggle-form-' + departementId);
+            const actif = this.dataset.actif === "True";
+
+            if (confirm(`Voulez-vous vraiment ${actif ? "désactiver" : "activer"} ce département ?`)) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,262 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">{% if modifier %}Modifier{% else %}Ajouter{% endif %} un Engin</h4>
+        <a href="{% url 'engins:engin_list' %}" class="btn btn-secondary btn-sm">
+            <i class="ri-arrow-left-line"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+
+        <!-- ========================= Informations générales ========================= -->
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Informations générales</h5>
+                </div>
+                <div class="card-body row g-3">
+                    {% for field in form %}
+                        {% if field.name not in 'couleur numero_chassis date_mise_circulation date_integration_ums flotte type_chassis nombre_essieux volume_benne_citerne type_fermeture_benne proprietaire contact_proprietaire camion_communautaire commentaire actif' %}
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Caractéristiques techniques ========================= -->
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Caractéristiques techniques</h5>
+                </div>
+                <div class="card-body row g-3">
+                    {% for field in form %}
+                        {% if field.name in 'couleur numero_chassis date_mise_circulation date_integration_ums flotte type_chassis nombre_essieux volume_benne_citerne type_fermeture_benne' %}
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Propriétaire ========================= -->
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">Propriétaire</h5>
+                </div>
+                <div class="card-body row g-3">
+                    {% for field in form %}
+                        {% if field.name in 'proprietaire contact_proprietaire camion_communautaire' %}
+                        <div class="col-md-6 col-lg-4 {% if field.name == 'camion_communautaire' %}form-check mt-4{% endif %}">
+                            {{ field }}
+                            <label class="form-check-label">{{ field.label }}</label>
+                            {% for error in field.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Commentaires et statut ========================= -->
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Commentaires et statut</h5>
+                </div>
+                <div class="card-body row g-3">
+                    <div class="col-12">
+                        {{ form.commentaire }}
+                        {% for error in form.commentaire.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-6 col-lg-4 form-check mt-4">
+                        {{ form.actif }}
+                        <label class="form-check-label">Actif</label>
+                        {% for error in form.actif.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Remorque ========================= -->
+        <div class="col-12 remorque-section d-none">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Remorque associée</h5>
+                </div>
+                <div class="card-body row g-3">
+                    {% for field in remorque_form %}
+                        <div class="col-md-6 col-lg-4 {% if field.name == 'actif' %}form-check mt-4{% endif %}">
+                            {{ field }}
+                            <label class="form-check-label">{{ field.label }}</label>
+                            {% for error in field.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Citerne ========================= -->
+        <div class="col-12 citerne-section d-none">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Citerne associée</h5>
+                </div>
+                <div class="card-body row g-3">
+                    {% for field in citerne_form %}
+                        <div class="col-md-6 col-lg-4 {% if field.name == 'actif' %}form-check mt-4{% endif %}">
+                            {{ field }}
+                            <label class="form-check-label">{{ field.label }}</label>
+                            {% for error in field.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Documents Engin ========================= -->
+        <div class="col-12 documents-section">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Documents de l'engin</h5>
+                </div>
+                <div class="card-body row g-3">
+                    {% for field in fichier_form %}
+                        <div class="col-md-6 col-lg-4">
+                            {{ field }}
+                            <label class="form-label">{{ field.label }}</label>
+                            {% for error in field.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Documents Remorque ========================= -->
+        <div class="col-12 documents-remorque-section d-none">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Documents de la Remorque</h5>
+                </div>
+                <div class="card-body row g-3">
+                    {% if remorque_fichier_form %}
+                        {% for field in remorque_fichier_form %}
+                            <div class="col-md-6 col-lg-4">
+                                {{ field }}
+                                <label class="form-label">{{ field.label }}</label>
+                                {% for error in field.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Documents Citerne ========================= -->
+        <div class="col-12 documents-citerne-section d-none">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Documents de la Citerne</h5>
+                </div>
+                <div class="card-body row g-3">
+                    {% if citerne_documents_form %}
+                        {% for field in citerne_documents_form %}
+                            <div class="col-md-6 col-lg-4">
+                                {{ field }}
+                                <label class="form-label">{{ field.label }}</label>
+                                {% for error in field.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Boutons ========================= -->
+        <div class="col-12 mb-5">
+            <button type="submit" class="btn btn-primary">
+                <i class="ri-save-line"></i> Enregistrer
+            </button>
+            <a href="{% url 'engins:engin_list' %}" class="btn btn-outline-secondary">Annuler</a>
+        </div>
+    </div>
+</form>
+
+<!-- ========================= JS pour afficher Remorque/Citerne et Documents ========================= -->
+<script>
+    const typeEnginSelect = document.getElementById("id_type_engin");
+    const remorqueSection = document.querySelector(".remorque-section");
+    const citerneSection = document.querySelector(".citerne-section");
+    const documentsRemorqueSection = document.querySelector(".documents-remorque-section");
+    const documentsCiterneSection = document.querySelector(".documents-citerne-section");
+
+    function toggleSections() {
+        if (!typeEnginSelect) return;
+        const selectedText = typeEnginSelect.options[typeEnginSelect.selectedIndex]?.text.toLowerCase();
+
+        // Masquer toutes les sections
+        remorqueSection.classList.add("d-none");
+        citerneSection.classList.add("d-none");
+        if (documentsRemorqueSection) documentsRemorqueSection.classList.add("d-none");
+        if (documentsCiterneSection) documentsCiterneSection.classList.add("d-none");
+
+        if (!selectedText) return;
+
+        // TRACTEUR + REMORQUE / SEMI
+        if (selectedText.includes("tracteur") || selectedText.includes("semi") || selectedText.includes("remorque")) {
+            remorqueSection.classList.remove("d-none");
+            if (documentsRemorqueSection) documentsRemorqueSection.classList.remove("d-none");
+        }
+
+        // CAMION CITERNE
+        if (selectedText.includes("citerne")) {
+            citerneSection.classList.remove("d-none");
+            if (documentsCiterneSection) documentsCiterneSection.classList.remove("d-none");
+        }
+    }
+
+    typeEnginSelect.addEventListener("change", toggleSections);
+    document.addEventListener("DOMContentLoaded", toggleSections);
+</script>
+
+{% endblock %}

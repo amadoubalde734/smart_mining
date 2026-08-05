@@ -1,0 +1,157 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- Titre -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Liste des PASS Mine</h4>
+            <div class="page-title-right">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ========== WIDGETS ========== -->
+<div class="row mb-4">
+
+    <!-- Total PASS -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Total PASS</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ total_pass }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                            <i class="bx bx-id-card text-primary"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASS Récent (30j) -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Récents (30j)</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ recent_pass }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="bx bx-timer text-success"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASS valides -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Valides</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ valid_pass }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                            <i class="bx bx-check-circle text-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASS expirés -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Expirés</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-0">
+                        <span class="counter-value" data-target="{{ expired_pass }}">0</span>
+                    </h4>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-danger-subtle rounded fs-3">
+                            <i class="bx bx-x-circle text-danger"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- ========== END WIDGETS ========== -->
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+             <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Passe Mine</h5>
+                <div>
+                 <a href="{% url 'habilitation:pass_create' %}" class="btn btn-success">
+                    <i class="ri-add-line align-bottom me-1"></i> Ajouter un PASS
+                </a>
+                </div>
+            </div>
+            <div class="card-body table-responsive">
+                <table id="buttons-datatables" class="display table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Employé</th>
+                            <th>Numéro PASS</th>
+                            <th>Date Émission</th>
+                            <th>Date Expiration</th>
+                            <th>Observation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in passes %}
+                        <tr>
+                            <td>{{ p.employe.nom }} {{ p.employe.prenoms }}</td>
+                            <td>{{ p.numero_pass }}</td>
+                            <td>{{ p.date_emission }}</td>
+                            <td>{{ p.date_expiration|default:"-" }}</td>
+                            <td>{{ p.observation|default:"-" }}</td>
+                            <td>
+                                <div class="dropdown d-inline-block">
+                                    <button class="btn btn-soft-secondary btn-sm" type="button" data-bs-toggle="dropdown">
+                                        <i class="ri-more-fill"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a href="{% url 'habilitation:pass_update' p.slug %}" class="dropdown-item edit-btn"><i class="ri-pencil-fill text-muted me-2"></i> Modifier</a></li>
+                                        <li><a href="{% url 'habilitation:pass_delete' p.slug %}" class="dropdown-item delete-btn"><i class="ri-delete-bin-fill text-muted me-2"></i> Supprimer</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center">Aucun PASS trouvé</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'backend/includes/sweetalert_list.html' %}
+{% endblock %}

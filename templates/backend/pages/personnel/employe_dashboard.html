@@ -1,0 +1,162 @@
+{% extends "backend/base.html" %}
+{% load static %}
+
+{% block inner_content %}
+{% include 'backend/includes/message.html' %}
+
+<!-- =================== WIDGETS =================== -->
+<div class="row">
+
+    <!-- Total Employés -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Employés</p>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                            <span class="counter-value" data-target="{{ total_employes }}">0</span>
+                        </h4>
+                        <a href="{% url 'personnel:employe_list' %}" class="text-decoration-underline text-muted">Voir la liste</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                            <i class="bx bx-group text-primary"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employés Actifs -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Employés Actifs</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                            <span class="counter-value" data-target="{{ total_actifs }}">0</span>
+                        </h4>
+                        <span class="text-success fw-semibold">Actifs</span>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="bx bx-check-circle text-success"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employés Inactifs -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Employés Inactifs</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                            <span class="counter-value" data-target="{{ total_inactifs }}">0</span>
+                        </h4>
+                        <span class="text-danger fw-semibold">Inactifs</span>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-danger-subtle rounded fs-3">
+                            <i class="bx bx-user-x text-danger"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Répartition H/F -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <p class="text-uppercase fw-medium text-muted mb-0">Répartition H/F</p>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-1">
+                            <span class="counter-value" data-target="{{ hommes }}">0</span> H |
+                            <span class="counter-value" data-target="{{ femmes }}">0</span> F
+                        </h4>
+                        <span class="text-muted">Total : {{ hommes|add:femmes }}</span>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-warning-subtle rounded fs-3">
+                            <i class="bx bx-male-female text-warning"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- =================== FIN WIDGETS =================== -->
+
+<!-- =================== ÉVOLUTION DES EMPLOYÉS =================== -->
+<div class="row mt-4">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h4 class="card-title mb-0 flex-grow-1">Évolution des employés</h4>
+            </div>
+            <div class="card-body">
+                <div id="evolution_employes_chart" data-colors='["--vz-primary", "--vz-success"]' class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Derniers employés ajoutés -->
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Derniers employés</h4>
+            </div>
+            <div class="card-body p-2">
+                <ul class="list-group list-group-flush">
+                    {% for emp in derniers_employes %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ emp.nom }} {{ emp.prenoms }}
+                        <span class="badge bg-primary rounded-pill">{{ emp.date_embauche|date:"d/m/Y" }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">Aucun employé récent</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'backend/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var data = JSON.parse(document.getElementById('evolution-employes').textContent);
+    var categories = JSON.parse(document.getElementById('evolution-dates').textContent);
+
+    var options = {
+        chart: { type: 'line', height: 350 },
+        series: [{ name: 'Employés', data: data }],
+        xaxis: { categories: categories },
+        stroke: { curve: 'smooth' },
+        colors: ['#556ee6'],
+        grid: { borderColor: '#f1f1f1' }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#evolution_employes_chart"), options);
+    chart.render();
+});
+
+</script>
+{% endblock %}
